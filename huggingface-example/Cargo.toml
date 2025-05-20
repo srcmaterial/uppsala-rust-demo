@@ -4,3 +4,22 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+anyhow = "1.0.98"
+cpal = "0.15.3"
+pyo3 = { version = "0.25.0", features = ["auto-initialize"] }
+
+[build-dependencies]
+pyo3-build-config = "0.25.0"
+
+# These flags might be needed for some PyO3 applications, keep them commented in case needed later
+# [target.x86_64-apple-darwin]
+# rustflags = [
+#   "-C", "link-arg=-undefined",
+#   "-C", "link-arg=dynamic_lookup",
+# ]
+# 
+# [target.aarch64-apple-darwin]
+# rustflags = [
+#   "-C", "link-arg=-undefined",
+#   "-C", "link-arg=dynamic_lookup",
+# ]
