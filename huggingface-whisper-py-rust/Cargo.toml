@@ -1,5 +1,5 @@
 [package]
-name = "huggingface-example"
+name = "huggingface-whisper-py-rust"
 version = "0.1.0"
 edition = "2021"
 
