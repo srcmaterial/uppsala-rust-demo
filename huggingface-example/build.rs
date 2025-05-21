@@ -2,10 +2,8 @@ fn main() {
     // Load configuration for PyO3
     // Setting up Rust cfg variables for conditional compilation
     pyo3_build_config::use_pyo3_cfgs();
-    
-    // Add linker arguments for Python
-    pyo3_build_config::add_extension_module_link_args();
-    
+
+
     // Print config info for debugging
     println!("cargo:warning=Python configuration loaded for PyO3");
 }
