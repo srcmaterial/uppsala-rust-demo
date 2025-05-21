@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["filesizeformat","pluralize","striptags","truncate"]};

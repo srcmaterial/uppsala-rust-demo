@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["hiera","hiera_no_final_layer"],"struct":["Config"]};

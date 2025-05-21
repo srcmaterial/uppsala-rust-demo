@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["EuclideanCodebook","ResidualVectorQuantization","ResidualVectorQuantizer","SplitResidualVectorQuantizer","VectorQuantization"]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["ResnetBlock2D","ResnetBlock2DConfig"]};

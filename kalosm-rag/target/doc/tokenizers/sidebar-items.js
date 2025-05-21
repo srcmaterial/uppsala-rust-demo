@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"macro":["impl_serde_type"],"mod":["decoders","models","normalizers","pre_tokenizers","processors","tokenizer","utils"]};

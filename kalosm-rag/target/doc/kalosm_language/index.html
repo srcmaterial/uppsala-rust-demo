@@ -1,0 +1,167 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Kalosm Language"><title>kalosm_language - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-916cea96.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="kalosm_language" data-themes="" data-resource-suffix="" data-rustdoc-version="1.87.0 (17067e9ac 2025-05-09)" data-channel="1.87.0" data-search-js="search-e7298875.js" data-settings-js="settings-d72f25bb.js" ><script src="../static.files/storage-82c7156e.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-fb8c74a8.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../kalosm_language/index.html">kalosm_<wbr>language</a><span class="version">0.4.1</span></h2></div><div class="sidebar-elems"><ul class="block"><li><a id="all-types" href="all.html">All Items</a></li></ul><section id="rustdoc-toc"><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#kalosm-language" title="Kalosm Language">Kalosm Language</a><ul><li><a href="#text-generation-models" title="Text Generation Models">Text Generation Models</a></li><li><a href="#embedding-models" title="Embedding Models">Embedding Models</a></li><li><a href="#context" title="Context">Context</a></li></ul></li></ul><h3><a href="#reexports">Crate Items</a></h3><ul class="block"><li><a href="#reexports" title="Re-exports">Re-exports</a></li><li><a href="#modules" title="Modules">Modules</a></li></ul></section><div id="rustdoc-modnav"></div></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1>Crate <span>kalosm_language</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/kalosm_language/lib.rs.html#1-30">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><h2 id="kalosm-language"><a class="doc-anchor" href="#kalosm-language">§</a>Kalosm Language</h2>
+<p>Language processing utilities for the Kalosm framework.</p>
+<p>The language part of Kalosm has a few core parts:</p>
+<ul>
+<li>Models: <a href="prelude::ModelExt">Text generation</a> and <a href="prelude/trait.EmbedderExt.html" title="trait kalosm_language::prelude::EmbedderExt">embedding models</a></li>
+<li>Context: <a href="context/struct.Document.html" title="struct kalosm_language::context::Document">Document collection</a>, <a href="context/enum.FsDocument.html" title="enum kalosm_language::context::FsDocument">format support</a>, <a href="context/struct.SearchQuery.html" title="struct kalosm_language::context::SearchQuery">search</a> and <a href="search/trait.Chunker.html" title="trait kalosm_language::search::Chunker">chunking</a></li>
+<li>Integrations: SurrealDB, <a href="context/struct.SearchQuery.html" title="struct kalosm_language::context::SearchQuery">Serper</a>, and other integrations</li>
+</ul>
+<h3 id="text-generation-models"><a class="doc-anchor" href="#text-generation-models">§</a>Text Generation Models</h3>
+<p><a href="prelude::Model"><code>Model</code></a> and <a href="prelude::ModelExt"><code>ModelExt</code></a> are the core traits for text generation models. Any model that implements these traits can be used with Kalosm.</p>
+<p>The simplest way to use a model is to create a <a href="prelude/struct.Llama.html" title="struct kalosm_language::prelude::Llama">llama model</a> and call <a href="prelude::ModelExt::stream_text">stream_text</a> on it:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>kalosm::language::<span class="kw-2">*</span>;
+<span class="attr">#[tokio::main]
+</span><span class="kw">async fn </span>main() {
+    <span class="kw">let </span><span class="kw-2">mut </span>llm = Llama::new().<span class="kw">await</span>.unwrap();
+    <span class="kw">let </span>prompt = <span class="string">"The following is a 300 word essay about why the capital of France is Paris:"</span>;
+    <span class="macro">print!</span>(<span class="string">"{prompt}"</span>);
+    <span class="comment">// Any model that implements the [`TextCompletionModel`] trait can be used to stream text
+    </span><span class="kw">let </span><span class="kw-2">mut </span>stream = llm.complete(prompt);
+    <span class="comment">// You can then use the stream however you need. to_std_out will print the text to the console as it is generated
+    </span>stream.to_std_out().<span class="kw">await</span>.unwrap();
+}</code></pre></div>
+<h4 id="tasks"><a class="doc-anchor" href="#tasks">§</a>Tasks</h4>
+<p>You can define a Task with a description then run it with an input. The task will cache the description to repeated calls faster. Tasks work with chat models.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>kalosm::language::<span class="kw-2">*</span>;
+<span class="attr">#[tokio::main]
+</span><span class="kw">async fn </span>main() {
+    <span class="comment">// Create a new model
+    </span><span class="kw">let </span>model = Llama::new_chat().<span class="kw">await</span>.unwrap();
+    <span class="comment">// Create a new task that summarizes text
+    </span><span class="kw">let </span>task = model.task(<span class="string">"You take a long description and summarize it into a single short sentence"</span>);
+    <span class="kw">let </span><span class="kw-2">mut </span>output = task(<span class="string">"You can define a Task with a description then run it with an input. The task will cache the description to repeated calls faster. Tasks work with chat models."</span>);
+    <span class="comment">// Then stream the output to the console
+    </span>output.to_std_out().<span class="kw">await</span>.unwrap();
+}</code></pre></div>
+<h4 id="structured-generation"><a class="doc-anchor" href="#structured-generation">§</a>Structured Generation</h4>
+<p>Structured generation gives you more control over the output of the text generation. You can derive a parser for your data to easily get structured data out of an LLM:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>kalosm::language::<span class="kw-2">*</span>;
+<span class="attr">#[derive(Parse, Clone)]
+</span><span class="kw">struct </span>Pet {
+    name: String,
+    age: u32,
+    description: String,
+}</code></pre></div>
+<p>Then you can generate text that works with the parser in a <a href="prelude/struct.Task.html" title="struct kalosm_language::prelude::Task"><code>Task</code></a>:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="attr">#[derive(Parse, Debug, Clone)]
+</span><span class="kw">struct </span>Pet {
+    name: String,
+    age: u32,
+    description: String,
+}
+
+<span class="attr">#[tokio::main]
+</span><span class="kw">async fn </span>main() {
+    <span class="comment">// First create a model. Chat models tend to work best with structured generation
+    </span><span class="kw">let </span>model = Llama::new_chat().<span class="kw">await</span>.unwrap();
+    <span class="comment">// Then create a parser for your data. Any type that implements the `Parse` trait has the `new_parser` method
+    </span><span class="kw">let </span>parser = Arc::new(Pet::new_parser());
+    <span class="comment">// Then create a task with the parser as constraints
+    </span><span class="kw">let </span>task = model.task(<span class="string">"You generate realistic JSON placeholders"</span>)
+        .with_constraints(parser);
+    <span class="comment">// Finally, run the task
+    </span><span class="kw">let </span>pet: Pet = task(<span class="string">"Generate a pet in the form {\"name\": \"Pet name\", \"age\": 0, \"description\": \"Pet description\"}"</span>).<span class="kw">await</span>.unwrap();
+    <span class="macro">println!</span>(<span class="string">"{pet:?}"</span>);
+}</code></pre></div>
+<h3 id="embedding-models"><a class="doc-anchor" href="#embedding-models">§</a>Embedding Models</h3>
+<p><a href="prelude/trait.Embedder.html" title="trait kalosm_language::prelude::Embedder"><code>Embedder</code></a> and <a href="prelude/trait.EmbedderExt.html" title="trait kalosm_language::prelude::EmbedderExt"><code>EmbedderExt</code></a> are the core traits for text embedding models. Any model that implements these traits can be used with Kalosm.</p>
+<p>The simplest way to use an embedding model is to create a <a href="prelude/struct.Bert.html" title="struct kalosm_language::prelude::Bert">bert model</a> and call <a href="prelude/trait.EmbedderExt.html#method.embed" title="method kalosm_language::prelude::EmbedderExt::embed"><code>embed</code></a> on it. The <a href="prelude/struct.Embedding.html" title="struct kalosm_language::prelude::Embedding"><code>Embedding</code></a> you get back represents the meaning of the text in a numerical format:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>kalosm::language::<span class="kw-2">*</span>;
+<span class="attr">#[tokio::main]
+</span><span class="kw">async fn </span>main() {
+    <span class="comment">// First create a model. Bert::new() is a good default embedding model for general tasks
+    </span><span class="kw">let </span>model = Bert::new().<span class="kw">await</span>.unwrap();
+    <span class="comment">// Then embed some text into the vector space
+    </span><span class="kw">let </span>embedding = model.embed(<span class="string">"Kalosm is a library for building AI applications"</span>).<span class="kw">await</span>.unwrap();
+    <span class="comment">// And some more text
+    </span><span class="kw">let </span>embedding = model.embed(prompt_input(<span class="string">"Text: "</span>).unwrap()).<span class="kw">await</span>.unwrap();
+    <span class="comment">// You can compare the cosine similarity of the two embeddings to see how similar they are
+    </span><span class="macro">println!</span>(<span class="string">"cosine similarity: {}"</span>, embedding.cosine_similarity(<span class="kw-2">&amp;</span>embedding));
+}</code></pre></div>
+<h3 id="context"><a class="doc-anchor" href="#context">§</a>Context</h3>
+<p>Gathering context is a key part of building LLM applications. Providing the right context to the model makes the output more relevant and useful. It can also help to prevent hallucinations.</p>
+<p>Kalosm provides tools to generate gather, and process context from a variety of sources.</p>
+<h4 id="gathering-context"><a class="doc-anchor" href="#gathering-context">§</a>Gathering context</h4>
+<p>Kalosm provides utilities for collecting context from a variety of sources:</p>
+<ul>
+<li>Local files (.txt, .md, .html, .docx, .pdf)</li>
+<li>RSS feeds</li>
+<li>Websites</li>
+<li>Search engines</li>
+<li>Microphone input and audio input through <a href="https://docs.rs/rwhisper/latest/rwhisper/struct.Whisper.html">whisper transcriptions</a></li>
+</ul>
+<p>Each of these sources implements either <a href="context/trait.IntoDocument.html" title="trait kalosm_language::context::IntoDocument"><code>IntoDocument</code></a> or <a href="context/trait.IntoDocuments.html" title="trait kalosm_language::context::IntoDocuments"><code>IntoDocuments</code></a> to convert the data into a <a href="context/struct.Document.html" title="struct kalosm_language::context::Document"><code>Document</code></a> with the contents and metadata about the document.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>kalosm::language::<span class="kw-2">*</span>;
+<span class="kw">use </span>std::convert::TryFrom;
+<span class="kw">use </span>std::path::PathBuf;
+
+<span class="attr">#[tokio::main]
+</span><span class="kw">async fn </span>main() -&gt; <span class="prelude-ty">Result</span>&lt;(), Box&lt;<span class="kw">dyn </span>std::error::Error&gt;&gt; {
+    <span class="comment">// Try to extract an article from a URL
+    </span><span class="kw">let </span>page = Url::parse(<span class="string">"https://www.nytimes.com/live/2023/09/21/world/zelensky-russia-ukraine-news"</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>document = page.into_document().<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="macro">println!</span>(<span class="string">"Title: {}"</span>, document.title());
+    <span class="macro">println!</span>(<span class="string">"Body: {}"</span>, document.body());
+
+    <span class="prelude-val">Ok</span>(())
+}</code></pre></div>
+<h4 id="chunking-context"><a class="doc-anchor" href="#chunking-context">§</a>Chunking context</h4>
+<p>After you have gathered context, it is often useful to chunk it into smaller pieces for search. Kalosm provides utilities for chunking context into documents, sentences, paragraphs, or semantic chunks. Kalosm will embed each chunk as it splits the document into smaller pieces. One of the most powerful chunker is the semantic chunker, which lets you chunk documents into semantically similar chunks without explicitly setting the size of the chunks:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>kalosm::language::<span class="kw-2">*</span>;
+
+<span class="attr">#[tokio::main]
+</span><span class="kw">async fn </span>main() -&gt; <span class="prelude-ty">Result</span>&lt;(), Box&lt;<span class="kw">dyn </span>std::error::Error&gt;&gt; {
+    <span class="comment">// First, create an embedding model for semantic chunking
+    </span><span class="kw">let </span>model = Bert::new().<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="comment">// Then create a document folder with some documents
+    </span><span class="kw">let </span>documents = DocumentFolder::new(<span class="string">"./documents"</span>)<span class="question-mark">?</span>.into_documents().<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="comment">// Then chunk the documents into sentences
+    </span><span class="kw">let </span>chunked = SemanticChunker::new().chunk_batch(<span class="kw-2">&amp;</span>documents, <span class="kw-2">&amp;</span>model).<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="macro">println!</span>(<span class="string">"{:?}"</span>, chunked);
+    <span class="prelude-val">Ok</span>(())
+}</code></pre></div>
+<h4 id="embedding-powered-search"><a class="doc-anchor" href="#embedding-powered-search">§</a>Embedding-powered search</h4>
+<p>After you have chunked your context, you can use the embeddings for search or retrieval augmented generation. Embedding-based search lets you find documents that are semantically similar to a specific word or phrase even if no words are an exact match:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>kalosm::language::<span class="kw-2">*</span>;
+<span class="kw">use </span>surrealdb::{engine::local::SurrealKv, Surreal};
+
+<span class="attr">#[tokio::main]
+</span><span class="kw">async fn </span>main() {
+    <span class="comment">// Create database connection
+    </span><span class="kw">let </span>db = Surreal::new::&lt;SurrealKv&gt;(std::env::temp_dir().join(<span class="string">"temp.db"</span>)).<span class="kw">await</span>.unwrap();
+
+    <span class="comment">// Select a specific namespace / database
+    </span>db.use_ns(<span class="string">"search"</span>).use_db(<span class="string">"documents"</span>).<span class="kw">await</span>.unwrap();
+
+    <span class="comment">// Create a table in the surreal database to store the embeddings
+    </span><span class="kw">let </span>document_table = db
+        .document_table_builder(<span class="string">"documents"</span>)
+        .build::&lt;Document&gt;()
+        .<span class="kw">await
+        </span>.unwrap();
+
+    <span class="comment">// Add documents to the database
+    </span>document_table.add_context(DocumentFolder::new(<span class="string">"./documents"</span>).unwrap()).<span class="kw">await</span>.unwrap();
+
+    <span class="kw">loop </span>{
+        <span class="comment">// Get the user's question
+        </span><span class="kw">let </span>user_question = prompt_input(<span class="string">"Query: "</span>).unwrap();
+
+        <span class="kw">let </span>nearest_5 = document_table
+            .search(user_question)
+            .with_results(<span class="number">5</span>)
+            .<span class="kw">await
+            </span>.unwrap();
+
+        <span class="macro">println!</span>(<span class="string">"{:?}"</span>, nearest_5);
+    }
+}</code></pre></div>
+</div></details><h2 id="reexports" class="section-header">Re-exports<a href="#reexports" class="anchor">§</a></h2><dl class="item-table reexports"><dt id="reexport.kalosm_language_model"><code>pub use <a class="mod" href="../kalosm_language_model/index.html" title="mod kalosm_language_model">kalosm_language_model</a>;</code></dt><dt id="reexport.kalosm_llama"><code>pub use <a class="mod" href="../kalosm_llama/index.html" title="mod kalosm_llama">kalosm_llama</a>;</code></dt><dt id="reexport.kalosm_sample"><code>pub use <a class="mod" href="prelude/kalosm_sample/index.html" title="mod kalosm_language::prelude::kalosm_sample">kalosm_sample</a>;</code></dt><dt id="reexport.rbert"><code>pub use <a class="mod" href="../rbert/index.html" title="mod rbert">rbert</a>;</code></dt></dl><h2 id="modules" class="section-header">Modules<a href="#modules" class="anchor">§</a></h2><dl class="item-table"><dt><a class="mod" href="context/index.html" title="mod kalosm_language::context">context</a></dt><dd>Context for language models to consume.</dd><dt><a class="mod" href="prelude/index.html" title="mod kalosm_language::prelude">prelude</a></dt><dd>A prelude of commonly used items in kalosm-language</dd><dt><a class="mod" href="search/index.html" title="mod kalosm_language::search">search</a></dt><dd>The index module contains different types of search indexes that can be used to search for <a href="context/struct.Document.html" title="struct kalosm_language::context::Document"><code>crate::context::Document</code></a>s created from <a href="context/trait.IntoDocument.html" title="trait kalosm_language::context::IntoDocument"><code>crate::context::IntoDocument</code></a> or <a href="context/trait.IntoDocuments.html" title="trait kalosm_language::context::IntoDocuments"><code>crate::context::IntoDocuments</code></a></dd><dt><a class="mod" href="vector_db/index.html" title="mod kalosm_language::vector_db">vector_<wbr>db</a></dt><dd>A vector database that can be used to store embeddings and search for similar embeddings.</dd></dl></section></div></main></body></html>

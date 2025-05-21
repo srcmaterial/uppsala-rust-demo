@@ -1,0 +1,43 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="T5 model implementation."><title>candle_transformers::models::t5 - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-916cea96.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="candle_transformers" data-themes="" data-resource-suffix="" data-rustdoc-version="1.87.0 (17067e9ac 2025-05-09)" data-channel="1.87.0" data-search-js="search-e7298875.js" data-settings-js="settings-d72f25bb.js" ><script src="../../../static.files/storage-82c7156e.js"></script><script defer src="../sidebar-items.js"></script><script defer src="../../../static.files/main-fb8c74a8.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc mod"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../../../candle_transformers/index.html">candle_<wbr>transformers</a><span class="version">0.8.4</span></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">Module t5</a></h2><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#encoder-decoder-example" title="Encoder-decoder example:">Encoder-decoder example:</a></li><li><a href="#translation-with-madlad" title="Translation with MADLAD">Translation with MADLAD</a><ul><li><a href="#sentence-embedding-example" title="Sentence embedding example">Sentence embedding example</a></li></ul></li></ul><h3><a href="#structs">Module Items</a></h3><ul class="block"><li><a href="#structs" title="Structs">Structs</a></li><li><a href="#functions" title="Functions">Functions</a></li></ul></section><div id="rustdoc-modnav"><h2><a href="../index.html">In candle_<wbr>transformers::<wbr>models</a></h2></div></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><div class="rustdoc-breadcrumbs"><a href="../../index.html">candle_transformers</a>::<wbr><a href="../index.html">models</a></div><h1>Module <span>t5</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../../../src/candle_transformers/models/t5.rs.html#1-953">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>T5 model implementation.</p>
+<p>T5 (Text-to-Text Transfer Transformer) is a unified text-to-text transformer model.
+This implementation follows the original model architecture.</p>
+<p>Key characteristics:</p>
+<ul>
+<li>Text-to-text framework</li>
+<li>Relative positional embeddings</li>
+<li>T5-specific layer normalization</li>
+<li>Encoder-decoder architecture</li>
+<li>Support for sequence-to-sequence tasks</li>
+</ul>
+<p>References:</p>
+<ul>
+<li>⚡ <a href="https://huggingface.co/spaces/radames/Candle-T5-Generation-Wasm">Interactive Wasm Example</a></li>
+<li>💻<a href="https://github.com/huggingface/transformers/blob/main/src/transformers/models/t5/modeling_t5.py">GH Model</a></li>
+<li>🤗 <a href="https://huggingface.co/docs/transformers/model_doc/t5">HF Link</a></li>
+<li>📝 <a href="https://arxiv.org/abs/1910.10683">T5 Paper</a></li>
+</ul>
+<h2 id="encoder-decoder-example"><a class="doc-anchor" href="#encoder-decoder-example">§</a>Encoder-decoder example:</h2><div class="example-wrap"><pre class="language-bash"><code>cargo run --example t5 --release -- \
+  --model-id &quot;t5-small&quot; \
+  --prompt &quot;translate to German: A beautiful candle.&quot; \
+  --decode
+&gt; ...
+&gt;  Eine schöne Kerze.
+&gt; 9 tokens generated (2.42 token/s)</code></pre></div>
+<p>Variants such as <a href="https://huggingface.co/google/flan-t5-small">flan-t5</a>, <a href="https://huggingface.co/google/flan-ul2">flan-ul2</a> (with <code>--revision "refs/pr/25"</code>), and <a href="https://huggingface.co/grammarly/coedit-large">Co-EdIT</a> are also supported.</p>
+<h2 id="translation-with-madlad"><a class="doc-anchor" href="#translation-with-madlad">§</a>Translation with MADLAD</h2>
+<p><a href="https://arxiv.org/abs/2309.04662">MADLAD-400</a> is a series of multilingual machine translation T5 models trained on 250 billion tokens covering over 450 languages using publicly available data. These models are competitive with significantly larger models.</p>
+<div class="example-wrap"><pre class="language-bash"><code>cargo run --example t5 --release  -- \
+  --model-id &quot;jbochi/madlad400-3b-mt&quot; \
+  --prompt &quot;&lt;2de&gt; How are you, my friend?&quot; \
+  --decode --temperature 0
+...
+ Wie geht es dir, mein Freund?</code></pre></div><h3 id="sentence-embedding-example"><a class="doc-anchor" href="#sentence-embedding-example">§</a>Sentence embedding example</h3><div class="example-wrap"><pre class="language-bash"><code>cargo run --example t5 --release -- \
+  --model-id &quot;t5-small&quot; --prompt &quot;A beautiful candle.&quot;
+...
+[[[ 0.0515, -0.0541, -0.0761, ..., -0.0392,  0.1511, -0.0265],
+  [-0.0974,  0.0998, -0.1659, ..., -0.2450,  0.1738, -0.0164],
+  [ 0.0624, -0.1024,  0.0430, ..., -0.1388,  0.0564, -0.2962],
+  [-0.0389, -0.1173,  0.0026, ...,  0.1064, -0.1065,  0.0990],
+  [ 0.1300,  0.0027, -0.0326, ...,  0.0026, -0.0317,  0.0851]]]
+Tensor[[1, 5, 512], f32]
+Took 303.766583ms</code></pre></div></div></details><h2 id="structs" class="section-header">Structs<a href="#structs" class="anchor">§</a></h2><dl class="item-table"><dt><a class="struct" href="struct.ActivationWithOptionalGating.html" title="struct candle_transformers::models::t5::ActivationWithOptionalGating">Activation<wbr>With<wbr>Optional<wbr>Gating</a></dt><dt><a class="struct" href="struct.Config.html" title="struct candle_transformers::models::t5::Config">Config</a></dt><dt><a class="struct" href="struct.Linear.html" title="struct candle_transformers::models::t5::Linear">Linear</a></dt><dt><a class="struct" href="struct.T5EncoderModel.html" title="struct candle_transformers::models::t5::T5EncoderModel">T5Encoder<wbr>Model</a></dt><dt><a class="struct" href="struct.T5ForConditionalGeneration.html" title="struct candle_transformers::models::t5::T5ForConditionalGeneration">T5For<wbr>Conditional<wbr>Generation</a></dt></dl><h2 id="functions" class="section-header">Functions<a href="#functions" class="anchor">§</a></h2><dl class="item-table"><dt><a class="fn" href="fn.deserialize_feed_forward_proj_activation.html" title="fn candle_transformers::models::t5::deserialize_feed_forward_proj_activation">deserialize_<wbr>feed_<wbr>forward_<wbr>proj_<wbr>activation</a></dt><dt><a class="fn" href="fn.linear_no_bias.html" title="fn candle_transformers::models::t5::linear_no_bias">linear_<wbr>no_<wbr>bias</a></dt></dl></section></div></main></body></html>

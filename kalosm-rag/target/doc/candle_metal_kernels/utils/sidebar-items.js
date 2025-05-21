@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["get_block_dims","set_param"],"struct":["BufferOffset","WrappedEncoder"],"trait":["EncoderParam","EncoderProvider"]};

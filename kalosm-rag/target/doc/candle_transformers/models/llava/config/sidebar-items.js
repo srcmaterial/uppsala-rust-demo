@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["HFGenerationConfig","HFLLaVAConfig","HFLLaVATextConfig","HFLLaVAVisionConfig","HFPreProcessorConfig","LLaVAConfig"]};

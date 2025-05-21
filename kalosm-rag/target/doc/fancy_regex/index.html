@@ -1,0 +1,107 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="An implementation of regexes, supporting a relatively rich set of features, including backreferences and lookaround."><title>fancy_regex - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-916cea96.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="fancy_regex" data-themes="" data-resource-suffix="" data-rustdoc-version="1.87.0 (17067e9ac 2025-05-09)" data-channel="1.87.0" data-search-js="search-e7298875.js" data-settings-js="settings-d72f25bb.js" ><script src="../static.files/storage-82c7156e.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-fb8c74a8.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../fancy_regex/index.html">fancy_<wbr>regex</a><span class="version">0.13.0</span></h2></div><div class="sidebar-elems"><ul class="block"><li><a id="all-types" href="all.html">All Items</a></li></ul><section id="rustdoc-toc"><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#usage" title="Usage">Usage</a><ul><li><a href="#example-matching-text" title="Example: Matching text">Example: Matching text</a></li><li><a href="#example-finding-the-position-of-matches" title="Example: Finding the position of matches">Example: Finding the position of matches</a></li><li><a href="#example-capturing-groups" title="Example: Capturing groups">Example: Capturing groups</a></li></ul></li><li><a href="#syntax" title="Syntax">Syntax</a></li></ul><h3><a href="#structs">Crate Items</a></h3><ul class="block"><li><a href="#structs" title="Structs">Structs</a></li><li><a href="#enums" title="Enums">Enums</a></li><li><a href="#traits" title="Traits">Traits</a></li><li><a href="#functions" title="Functions">Functions</a></li><li><a href="#types" title="Type Aliases">Type Aliases</a></li></ul></section><div id="rustdoc-modnav"></div></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1>Crate <span>fancy_regex</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/fancy_regex/lib.rs.html#21-1700">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>An implementation of regexes, supporting a relatively rich set of features, including backreferences
+and lookaround.</p>
+<p>It builds on top of the excellent <a href="https://crates.io/crates/regex">regex</a> crate. If you are not
+familiar with it, make sure you read its documentation and maybe you don’t even need fancy-regex.</p>
+<p>If your regex or parts of it does not use any special features, the matching is delegated to the
+regex crate. That means it has linear runtime. But if you use “fancy” features such as
+backreferences or look-around, an engine with backtracking needs to be used. In that case, the regex
+can be slow and take exponential time to run because of what is called “catastrophic backtracking”.
+This depends on the regex and the input.</p>
+<h2 id="usage"><a class="doc-anchor" href="#usage">§</a>Usage</h2>
+<p>The API should feel very similar to the regex crate, and involves compiling a regex and then using
+it to find matches in text.</p>
+<h3 id="example-matching-text"><a class="doc-anchor" href="#example-matching-text">§</a>Example: Matching text</h3>
+<p>An example with backreferences to check if a text consists of two identical words:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>fancy_regex::Regex;
+
+<span class="kw">let </span>re = Regex::new(<span class="string">r"^(\w+) (\1)$"</span>).unwrap();
+<span class="kw">let </span>result = re.is_match(<span class="string">"foo foo"</span>);
+
+<span class="macro">assert!</span>(result.is_ok());
+<span class="kw">let </span>did_match = result.unwrap();
+<span class="macro">assert!</span>(did_match);</code></pre></div>
+<p>Note that like in the regex crate, the regex needs anchors like <code>^</code> and <code>$</code> to match against the
+entire input text.</p>
+<h3 id="example-finding-the-position-of-matches"><a class="doc-anchor" href="#example-finding-the-position-of-matches">§</a>Example: Finding the position of matches</h3>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>fancy_regex::Regex;
+
+<span class="kw">let </span>re = Regex::new(<span class="string">r"(\d)\1"</span>).unwrap();
+<span class="kw">let </span>result = re.find(<span class="string">"foo 22"</span>);
+
+<span class="macro">assert!</span>(result.is_ok(), <span class="string">"execution was successful"</span>);
+<span class="kw">let </span>match_option = result.unwrap();
+
+<span class="macro">assert!</span>(match_option.is_some(), <span class="string">"found a match"</span>);
+<span class="kw">let </span>m = match_option.unwrap();
+
+<span class="macro">assert_eq!</span>(m.start(), <span class="number">4</span>);
+<span class="macro">assert_eq!</span>(m.end(), <span class="number">6</span>);
+<span class="macro">assert_eq!</span>(m.as_str(), <span class="string">"22"</span>);</code></pre></div>
+<h3 id="example-capturing-groups"><a class="doc-anchor" href="#example-capturing-groups">§</a>Example: Capturing groups</h3>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>fancy_regex::Regex;
+
+<span class="kw">let </span>re = Regex::new(<span class="string">r"(?&lt;!AU)\$(\d+)"</span>).unwrap();
+<span class="kw">let </span>result = re.captures(<span class="string">"AU$10, $20"</span>);
+
+<span class="kw">let </span>captures = result.expect(<span class="string">"Error running regex"</span>).expect(<span class="string">"No match found"</span>);
+<span class="kw">let </span>group = captures.get(<span class="number">1</span>).expect(<span class="string">"No group"</span>);
+<span class="macro">assert_eq!</span>(group.as_str(), <span class="string">"20"</span>);</code></pre></div>
+<h2 id="syntax"><a class="doc-anchor" href="#syntax">§</a>Syntax</h2>
+<p>The regex syntax is based on the <a href="https://crates.io/crates/regex">regex</a> crate’s, with some additional supported syntax.</p>
+<p>Escapes:</p>
+<p><code>\h</code>
+: hex digit (<code>[0-9A-Fa-f]</code>) <br />
+<code>\H</code>
+: not hex digit (<code>[^0-9A-Fa-f]</code>) <br />
+<code>\e</code>
+: escape control character (<code>\x1B</code>) <br />
+<code>\K</code>
+: keep text matched so far out of the overall match (<a href="https://www.regular-expressions.info/keep.html">docs</a>)<br />
+<code>\G</code>
+: anchor to where the previous match ended (<a href="https://www.regular-expressions.info/continue.html">docs</a>)</p>
+<p>Backreferences:</p>
+<p><code>\1</code>
+: match the exact string that the first capture group matched <br />
+<code>\2</code>
+: backref to the second capture group, etc</p>
+<p>Named capture groups:</p>
+<p><code>(?&lt;name&gt;exp)</code>
+: match <em>exp</em>, creating capture group named <em>name</em> <br />
+<code>\k&lt;name&gt;</code>
+: match the exact string that the capture group named <em>name</em> matched <br />
+<code>(?P&lt;name&gt;exp)</code>
+: same as <code>(?&lt;name&gt;exp)</code> for compatibility with Python, etc. <br />
+<code>(?P=name)</code>
+: same as <code>\k&lt;name&gt;</code> for compatibility with Python, etc.</p>
+<p>Look-around assertions for matching without changing the current position:</p>
+<p><code>(?=exp)</code>
+: look-ahead, succeeds if <em>exp</em> matches to the right of the current position <br />
+<code>(?!exp)</code>
+: negative look-ahead, succeeds if <em>exp</em> doesn’t match to the right <br />
+<code>(?&lt;=exp)</code>
+: look-behind, succeeds if <em>exp</em> matches to the left of the current position <br />
+<code>(?&lt;!exp)</code>
+: negative look-behind, succeeds if <em>exp</em> doesn’t match to the left</p>
+<p>Atomic groups using <code>(?&gt;exp)</code> to prevent backtracking within <code>exp</code>, e.g.:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span>re = Regex::new(<span class="string">r"^a(?&gt;bc|b)c$"</span>).unwrap();
+<span class="macro">assert!</span>(re.is_match(<span class="string">"abcc"</span>).unwrap());
+<span class="comment">// Doesn't match because `|b` is never tried because of the atomic group
+</span><span class="macro">assert!</span>(!re.is_match(<span class="string">"abc"</span>).unwrap());</code></pre></div>
+<p>Conditionals - if/then/else:</p>
+<p><code>(?(1))</code>
+: continue only if first capture group matched <br />
+<code>(?(&lt;name&gt;))</code>
+: continue only if capture group named <em>name</em> matched <br />
+<code>(?(1)true_branch|false_branch)</code>
+: if the first capture group matched then execute the true_branch regex expression, else execute false_branch (<a href="https://www.regular-expressions.info/conditional.html">docs</a>) <br />
+<code>(?(condition)true_branch|false_branch)</code>
+: if the condition matches then execute the true_branch regex expression, else execute false_branch from the point just before the condition was evaluated</p>
+</div></details><h2 id="structs" class="section-header">Structs<a href="#structs" class="anchor">§</a></h2><dl class="item-table"><dt><a class="struct" href="struct.CaptureMatches.html" title="struct fancy_regex::CaptureMatches">Capture<wbr>Matches</a></dt><dd>An iterator that yields all non-overlapping capture groups matching a
+particular regular expression.</dd><dt><a class="struct" href="struct.CaptureNames.html" title="struct fancy_regex::CaptureNames">Capture<wbr>Names</a></dt><dd>An iterator over capture names in a <a href="struct.Regex.html" title="struct fancy_regex::Regex">Regex</a>.  The iterator
+returns the name of each group, or <a href="https://doc.rust-lang.org/1.87.0/core/option/enum.Option.html#variant.None" title="variant core::option::Option::None">None</a> if the group has
+no name.  Because capture group 0 cannot have a name, the
+first item returned is always <a href="https://doc.rust-lang.org/1.87.0/core/option/enum.Option.html#variant.None" title="variant core::option::Option::None">None</a>.</dd><dt><a class="struct" href="struct.Captures.html" title="struct fancy_regex::Captures">Captures</a></dt><dd>A set of capture groups found for a regex.</dd><dt><a class="struct" href="struct.Expander.html" title="struct fancy_regex::Expander">Expander</a></dt><dd>A set of options for expanding a template string using the contents
+of capture groups.</dd><dt><a class="struct" href="struct.Match.html" title="struct fancy_regex::Match">Match</a></dt><dd>A single match of a regex or group in an input text</dd><dt><a class="struct" href="struct.Matches.html" title="struct fancy_regex::Matches">Matches</a></dt><dd>An iterator over all non-overlapping matches for a particular string.</dd><dt><a class="struct" href="struct.NoExpand.html" title="struct fancy_regex::NoExpand">NoExpand</a></dt><dd><code>NoExpand</code> indicates literal string replacement.</dd><dt><a class="struct" href="struct.Regex.html" title="struct fancy_regex::Regex">Regex</a></dt><dd>A compiled regular expression.</dd><dt><a class="struct" href="struct.RegexBuilder.html" title="struct fancy_regex::RegexBuilder">Regex<wbr>Builder</a></dt><dd>A builder for a <code>Regex</code> to allow configuring options.</dd><dt><a class="struct" href="struct.ReplacerRef.html" title="struct fancy_regex::ReplacerRef">Replacer<wbr>Ref</a></dt><dd>By-reference adaptor for a <code>Replacer</code></dd><dt><a class="struct" href="struct.SubCaptureMatches.html" title="struct fancy_regex::SubCaptureMatches">SubCapture<wbr>Matches</a></dt><dd>Iterator for captured groups in order in which they appear in the regex.</dd></dl><h2 id="enums" class="section-header">Enums<a href="#enums" class="anchor">§</a></h2><dl class="item-table"><dt><a class="enum" href="enum.Assertion.html" title="enum fancy_regex::Assertion">Assertion</a></dt><dd>Type of assertions</dd><dt><a class="enum" href="enum.CompileError.html" title="enum fancy_regex::CompileError">Compile<wbr>Error</a></dt><dd>An error as the result of compiling a regex.</dd><dt><a class="enum" href="enum.Error.html" title="enum fancy_regex::Error">Error</a></dt><dd>An error as the result of parsing, compiling or running a regex.</dd><dt><a class="enum" href="enum.Expr.html" title="enum fancy_regex::Expr">Expr</a></dt><dd>Regular expression AST. This is public for now but may change.</dd><dt><a class="enum" href="enum.LookAround.html" title="enum fancy_regex::LookAround">Look<wbr>Around</a></dt><dd>Type of look-around assertion as used for a look-around expression.</dd><dt><a class="enum" href="enum.ParseError.html" title="enum fancy_regex::ParseError">Parse<wbr>Error</a></dt><dd>An error for the result of parsing a regex pattern.</dd><dt><a class="enum" href="enum.RuntimeError.html" title="enum fancy_regex::RuntimeError">Runtime<wbr>Error</a></dt><dd>An error as the result of executing a regex.</dd></dl><h2 id="traits" class="section-header">Traits<a href="#traits" class="anchor">§</a></h2><dl class="item-table"><dt><a class="trait" href="trait.Replacer.html" title="trait fancy_regex::Replacer">Replacer</a></dt><dd>Replacer describes types that can be used to replace matches in a string.</dd></dl><h2 id="functions" class="section-header">Functions<a href="#functions" class="anchor">§</a></h2><dl class="item-table"><dt><a class="fn" href="fn.escape.html" title="fn fancy_regex::escape">escape</a></dt><dd>Escapes special characters in <code>text</code> with ‘\’.  Returns a string which, when interpreted
+as a regex, matches exactly <code>text</code>.</dd></dl><h2 id="types" class="section-header">Type Aliases<a href="#types" class="anchor">§</a></h2><dl class="item-table"><dt><a class="type" href="type.Result.html" title="type fancy_regex::Result">Result</a></dt><dd>Result type for this crate with specific error enum.</dd></dl></section></div></main></body></html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Chat Session"><title>ChatSession in kalosm_language_model - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-916cea96.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="kalosm_language_model" data-themes="" data-resource-suffix="" data-rustdoc-version="1.87.0 (17067e9ac 2025-05-09)" data-channel="1.87.0" data-search-js="search-e7298875.js" data-settings-js="settings-d72f25bb.js" ><script src="../static.files/storage-82c7156e.js"></script><script defer src="sidebar-items.js"></script><script defer src="../static.files/main-fb8c74a8.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc trait"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../kalosm_language_model/index.html">kalosm_<wbr>language_<wbr>model</a><span class="version">0.4.1</span></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">Chat<wbr>Session</a></h2><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#chat-session" title="Chat Session">Chat Session</a><ul><li><a href="#saving-and-loading-sessions" title="Saving and Loading Sessions">Saving and Loading Sessions</a></li><li><a href="#session-history" title="Session History">Session History</a></li><li><a href="#cloning-sessions" title="Cloning Sessions">Cloning Sessions</a></li></ul></li></ul><h3><a href="#required-associated-types">Required Associated Types</a></h3><ul class="block"><li><a href="#associatedtype.Error" title="Error">Error</a></li></ul><h3><a href="#required-methods">Required Methods</a></h3><ul class="block"><li><a href="#tymethod.from_bytes" title="from_bytes">from_bytes</a></li><li><a href="#tymethod.history" title="history">history</a></li><li><a href="#tymethod.try_clone" title="try_clone">try_clone</a></li><li><a href="#tymethod.write_to" title="write_to">write_to</a></li></ul><h3><a href="#provided-methods">Provided Methods</a></h3><ul class="block"><li><a href="#method.to_bytes" title="to_bytes">to_bytes</a></li></ul><h3><a href="#implementors">Implementors</a></h3></section><div id="rustdoc-modnav"><h2 class="in-crate"><a href="index.html">In crate kalosm_<wbr>language_<wbr>model</a></h2></div></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><div class="rustdoc-breadcrumbs"><a href="index.html">kalosm_language_model</a></div><h1>Trait <span class="trait">ChatSession</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/kalosm_language_model/chat/mod.rs.html#152-268">Source</a> </span></div><pre class="rust item-decl"><code>pub trait ChatSession {
+    type <a href="#associatedtype.Error" class="associatedtype">Error</a>: <a class="trait" href="https://doc.rust-lang.org/1.87.0/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + <a class="trait" href="https://doc.rust-lang.org/1.87.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> + 'static;
+
+    // Required methods
+    fn <a href="#tymethod.write_to" class="fn">write_to</a>(&amp;self, into: &amp;mut <a class="struct" href="https://doc.rust-lang.org/1.87.0/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.u8.html">u8</a>&gt;) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.unit.html">()</a>, Self::<a class="associatedtype" href="trait.ChatSession.html#associatedtype.Error" title="type kalosm_language_model::ChatSession::Error">Error</a>&gt;;
+<span class="item-spacer"></span>    fn <a href="#tymethod.from_bytes" class="fn">from_bytes</a>(bytes: &amp;[<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.u8.html">u8</a>]) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Self, Self::<a class="associatedtype" href="trait.ChatSession.html#associatedtype.Error" title="type kalosm_language_model::ChatSession::Error">Error</a>&gt;
+       <span class="where">where Self: <a class="trait" href="https://doc.rust-lang.org/1.87.0/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a></span>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.history" class="fn">history</a>(&amp;self) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.87.0/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="struct" href="struct.ChatMessage.html" title="struct kalosm_language_model::ChatMessage">ChatMessage</a>&gt;;
+<span class="item-spacer"></span>    fn <a href="#tymethod.try_clone" class="fn">try_clone</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Self, Self::<a class="associatedtype" href="trait.ChatSession.html#associatedtype.Error" title="type kalosm_language_model::ChatSession::Error">Error</a>&gt;
+       <span class="where">where Self: <a class="trait" href="https://doc.rust-lang.org/1.87.0/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a></span>;
+
+    // Provided method
+    fn <a href="#method.to_bytes" class="fn">to_bytes</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.87.0/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.u8.html">u8</a>&gt;, Self::<a class="associatedtype" href="trait.ChatSession.html#associatedtype.Error" title="type kalosm_language_model::ChatSession::Error">Error</a>&gt; { ... }
+}</code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><h2 id="chat-session"><a class="doc-anchor" href="#chat-session">§</a>Chat Session</h2>
+<p>The <a href="trait.ChatSession.html" title="trait kalosm_language_model::ChatSession"><code>ChatSession</code></a> trait holds the state of a text completion model after it has been fed some text. It can be used in combination with <a href="trait.ChatModel.html" title="trait kalosm_language_model::ChatModel"><code>ChatModel</code></a> to feed text and cache the results.</p>
+<h3 id="saving-and-loading-sessions"><a class="doc-anchor" href="#saving-and-loading-sessions">§</a>Saving and Loading Sessions</h3>
+<p>Sessions can be serialized and deserialized to and from bytes using the <a href="trait.ChatSession.html#method.to_bytes" title="method kalosm_language_model::ChatSession::to_bytes"><code>ChatSession::to_bytes</code></a> and <a href="trait.ChatSession.html#tymethod.from_bytes" title="associated function kalosm_language_model::ChatSession::from_bytes"><code>ChatSession::from_bytes</code></a> methods. This can be useful for saving and loading sessions to disk. Caching a session avoids re-processing the text again when the session is resumed.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>kalosm::language::<span class="kw-2">*</span>;
+<span class="kw">use </span>std::io::Write;
+
+<span class="attr">#[tokio::main]
+</span><span class="kw">async fn </span>main() {
+    <span class="kw">let </span><span class="kw-2">mut </span>llm = Llama::new_chat().<span class="kw">await</span>.unwrap();
+    <span class="kw">let </span><span class="kw-2">mut </span>chat = llm.chat();
+
+    <span class="comment">// Feed some text into the session
+    </span>chat(<span class="string">"What is the capital of France?"</span>).to_std_out().<span class="kw">await</span>.unwrap();
+
+    <span class="comment">// Save the session to bytes
+    </span><span class="kw">let </span>session = chat.session().unwrap();
+    <span class="kw">let </span>session_as_bytes = session.to_bytes().unwrap();
+    
+    <span class="comment">// Load the session from bytes
+    </span><span class="kw">let </span><span class="kw-2">mut </span>session = LlamaChatSession::from_bytes(<span class="kw-2">&amp;</span>session_as_bytes).unwrap();
+    <span class="kw">let </span><span class="kw-2">mut </span>chat = llm.chat().with_session(session);
+
+    <span class="comment">// Feed some more text into the session
+    </span>chat(<span class="string">"What was my first question?"</span>).to_std_out().<span class="kw">await</span>.unwrap();
+}</code></pre></div>
+<h3 id="session-history"><a class="doc-anchor" href="#session-history">§</a>Session History</h3>
+<p>You can use the <a href="trait.ChatSession.html#tymethod.history" title="method kalosm_language_model::ChatSession::history"><code>ChatSession::history</code></a> method to get messages that have already been fed to the model:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span><span class="kw-2">mut </span>llm = Llama::new_chat().<span class="kw">await</span>.unwrap();
+<span class="kw">let </span><span class="kw-2">mut </span>chat = llm.chat();
+<span class="comment">// Add a message to the session
+</span>chat(<span class="string">"Hello, world!"</span>).to_std_out().<span class="kw">await</span>.unwrap();
+<span class="comment">// Get the history of the session
+</span><span class="kw">let </span>history = chat.session().unwrap().history();
+<span class="macro">assert_eq!</span>(history.len(), <span class="number">1</span>);
+<span class="macro">assert_eq!</span>(history[<span class="number">0</span>].role(), MessageType::UserMessage);
+<span class="macro">assert_eq!</span>(history[<span class="number">0</span>].content(), <span class="string">"Hello, world!"</span>);</code></pre></div>
+<h3 id="cloning-sessions"><a class="doc-anchor" href="#cloning-sessions">§</a>Cloning Sessions</h3>
+<p>Not all chat models support cloning sessions, but if a model does support
+cloning sessions, you can clone a session using the <a href="trait.ChatSession.html#tymethod.try_clone" title="method kalosm_language_model::ChatSession::try_clone"><code>ChatSession::try_clone</code></a> method
+to clone a session state while retaining the original session.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>kalosm::language::<span class="kw-2">*</span>;
+<span class="kw">use </span>std::io::Write;
+<span class="attr">#[tokio::main]
+</span><span class="kw">async fn </span>main() {
+    <span class="kw">let </span><span class="kw-2">mut </span>llm = Llama::new_chat().<span class="kw">await</span>.unwrap();
+    <span class="kw">let </span><span class="kw-2">mut </span>chat = llm.chat();
+    <span class="comment">// Feed some text into the session
+    </span>chat(<span class="string">"What is the capital of France?"</span>).to_std_out().<span class="kw">await</span>.unwrap();
+    <span class="kw">let </span><span class="kw-2">mut </span>session = chat.session().unwrap();
+    <span class="comment">// Clone the session
+    </span><span class="kw">let </span>cloned_session = session.try_clone().unwrap();
+    <span class="comment">// Feed some more text into the cloned session
+    </span><span class="kw">let </span><span class="kw-2">mut </span>chat = llm.chat().with_session(cloned_session);
+    chat(<span class="string">"What was my first question?"</span>).to_std_out().<span class="kw">await</span>.unwrap();
+}</code></pre></div>
+</div></details><h2 id="required-associated-types" class="section-header">Required Associated Types<a href="#required-associated-types" class="anchor">§</a></h2><div class="methods"><details class="toggle" open><summary><section id="associatedtype.Error" class="method"><a class="src rightside" href="../src/kalosm_language_model/chat/mod.rs.html#154">Source</a><h4 class="code-header">type <a href="#associatedtype.Error" class="associatedtype">Error</a>: <a class="trait" href="https://doc.rust-lang.org/1.87.0/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + <a class="trait" href="https://doc.rust-lang.org/1.87.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> + 'static</h4></section></summary><div class="docblock"><p>The type of error the chat session may return during operations.</p>
+</div></details></div><h2 id="required-methods" class="section-header">Required Methods<a href="#required-methods" class="anchor">§</a></h2><div class="methods"><details class="toggle method-toggle" open><summary><section id="tymethod.write_to" class="method"><a class="src rightside" href="../src/kalosm_language_model/chat/mod.rs.html#157">Source</a><h4 class="code-header">fn <a href="#tymethod.write_to" class="fn">write_to</a>(&amp;self, into: &amp;mut <a class="struct" href="https://doc.rust-lang.org/1.87.0/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.u8.html">u8</a>&gt;) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.unit.html">()</a>, Self::<a class="associatedtype" href="trait.ChatSession.html#associatedtype.Error" title="type kalosm_language_model::ChatSession::Error">Error</a>&gt;</h4></section></summary><div class="docblock"><p>Serialize the session into bytes.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.from_bytes" class="method"><a class="src rightside" href="../src/kalosm_language_model/chat/mod.rs.html#212-214">Source</a><h4 class="code-header">fn <a href="#tymethod.from_bytes" class="fn">from_bytes</a>(bytes: &amp;[<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.u8.html">u8</a>]) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Self, Self::<a class="associatedtype" href="trait.ChatSession.html#associatedtype.Error" title="type kalosm_language_model::ChatSession::Error">Error</a>&gt;<div class="where">where
+    Self: <a class="trait" href="https://doc.rust-lang.org/1.87.0/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a>,</div></h4></section></summary><div class="docblock"><h5 id="loading-sessions"><a class="doc-anchor" href="#loading-sessions">§</a>Loading sessions</h5>
+<p>Sessions can be deserialized to and from bytes using the <a href="trait.ChatSession.html#tymethod.from_bytes" title="associated function kalosm_language_model::ChatSession::from_bytes"><code>ChatSession::from_bytes</code></a> method.
+Caching a session avoids re-processing the text again when the session is resumed.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>kalosm::language::<span class="kw-2">*</span>;
+
+<span class="attr">#[tokio::main]
+</span><span class="kw">async fn </span>main() {
+    <span class="kw">let </span><span class="kw-2">mut </span>llm = Llama::new_chat().<span class="kw">await</span>.unwrap();
+    <span class="comment">// Load a chat session from a file
+    </span><span class="kw">let </span>session =
+        LlamaChatSession::from_bytes(std::fs::read(<span class="string">"session.bin"</span>).unwrap().as_slice()).unwrap();
+    <span class="kw">let </span><span class="kw-2">mut </span>chat = llm.chat().with_session(session);
+
+    <span class="comment">// Feed some more text into the session
+    </span>chat(<span class="string">"What was my first question?"</span>)
+        .to_std_out()
+        .<span class="kw">await
+        </span>.unwrap();
+}</code></pre></div>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.history" class="method"><a class="src rightside" href="../src/kalosm_language_model/chat/mod.rs.html#236">Source</a><h4 class="code-header">fn <a href="#tymethod.history" class="fn">history</a>(&amp;self) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.87.0/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="struct" href="struct.ChatMessage.html" title="struct kalosm_language_model::ChatMessage">ChatMessage</a>&gt;</h4></section></summary><div class="docblock"><h5 id="session-history-1"><a class="doc-anchor" href="#session-history-1">§</a>Session History</h5>
+<p>Get the history of the session. The history is a list of messages that have been sent to the model.</p>
+<h6 id="example"><a class="doc-anchor" href="#example">§</a>Example</h6>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span><span class="kw-2">mut </span>llm = Llama::new_chat().<span class="kw">await</span>.unwrap();
+<span class="kw">let </span><span class="kw-2">mut </span>chat = llm.chat();
+<span class="comment">// Add a message to the session
+</span>chat(<span class="string">"Hello, world!"</span>);
+<span class="comment">// Get the history of the session
+</span><span class="kw">let </span>history = chat.session().unwrap().history();
+<span class="macro">assert_eq!</span>(history.len(), <span class="number">1</span>);
+<span class="macro">assert_eq!</span>(history[<span class="number">0</span>].role(), MessageType::UserMessage);
+<span class="macro">assert_eq!</span>(history[<span class="number">0</span>].content(), <span class="string">"Hello, world!"</span>);</code></pre></div>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.try_clone" class="method"><a class="src rightside" href="../src/kalosm_language_model/chat/mod.rs.html#265-267">Source</a><h4 class="code-header">fn <a href="#tymethod.try_clone" class="fn">try_clone</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Self, Self::<a class="associatedtype" href="trait.ChatSession.html#associatedtype.Error" title="type kalosm_language_model::ChatSession::Error">Error</a>&gt;<div class="where">where
+    Self: <a class="trait" href="https://doc.rust-lang.org/1.87.0/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a>,</div></h4></section></summary><div class="docblock"><h5 id="cloning-sessions-1"><a class="doc-anchor" href="#cloning-sessions-1">§</a>Cloning Sessions</h5>
+<p>Not all chat models support cloning sessions, but if a model does support
+cloning sessions, you can clone a session using the <a href="trait.ChatSession.html#tymethod.try_clone" title="method kalosm_language_model::ChatSession::try_clone"><code>ChatSession::try_clone</code></a> method
+to clone a session state while retaining the original session.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>kalosm::language::<span class="kw-2">*</span>;
+<span class="kw">use </span>std::io::Write;
+
+<span class="attr">#[tokio::main]
+</span><span class="kw">async fn </span>main() {
+    <span class="kw">let </span><span class="kw-2">mut </span>llm = Llama::new_chat().<span class="kw">await</span>.unwrap();
+    <span class="kw">let </span><span class="kw-2">mut </span>chat = llm.chat();
+
+    <span class="comment">// Feed some text into the session
+    </span>chat(<span class="string">"What is the capital of France?"</span>).<span class="kw">await</span>.unwrap();
+    <span class="kw">let </span><span class="kw-2">mut </span>session = chat.session().unwrap();
+
+    <span class="comment">// Clone the session
+    </span><span class="kw">let </span>cloned_session = session.try_clone().unwrap();
+
+    <span class="comment">// Feed some more text into the cloned session
+    </span><span class="kw">let </span><span class="kw-2">mut </span>chat = llm.chat().with_session(cloned_session);
+    chat(<span class="string">"What was my first question?"</span>).<span class="kw">await</span>.unwrap();
+}</code></pre></div>
+</div></details></div><h2 id="provided-methods" class="section-header">Provided Methods<a href="#provided-methods" class="anchor">§</a></h2><div class="methods"><details class="toggle method-toggle" open><summary><section id="method.to_bytes" class="method"><a class="src rightside" href="../src/kalosm_language_model/chat/mod.rs.html#183-187">Source</a><h4 class="code-header">fn <a href="#method.to_bytes" class="fn">to_bytes</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.87.0/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.u8.html">u8</a>&gt;, Self::<a class="associatedtype" href="trait.ChatSession.html#associatedtype.Error" title="type kalosm_language_model::ChatSession::Error">Error</a>&gt;</h4></section></summary><div class="docblock"><h5 id="loading-sessions-1"><a class="doc-anchor" href="#loading-sessions-1">§</a>Loading sessions</h5>
+<p>Sessions can be deserialized to and from bytes using the <a href="trait.ChatSession.html#tymethod.from_bytes" title="associated function kalosm_language_model::ChatSession::from_bytes"><code>ChatSession::from_bytes</code></a> method.
+Caching a session avoids re-processing the text again when the session is resumed.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>kalosm::language::<span class="kw-2">*</span>;
+
+<span class="attr">#[tokio::main]
+</span><span class="kw">async fn </span>main() {
+    <span class="kw">let </span><span class="kw-2">mut </span>llm = Llama::new_chat().<span class="kw">await</span>.unwrap();
+    <span class="kw">let </span><span class="kw-2">mut </span>chat = llm.chat();
+
+    <span class="comment">// Feed some text into the session
+    </span>chat(<span class="string">"What is the capital of France?"</span>).<span class="kw">await</span>.unwrap();
+
+    <span class="comment">// Save the session to bytes
+    </span><span class="kw">let </span>session = chat.session().unwrap();
+    <span class="kw">let </span>session_as_bytes = session.to_bytes().unwrap();
+
+    <span class="comment">// And write those bytes to a file
+    </span>std::fs::write(<span class="string">"session.bin"</span>, session_as_bytes).unwrap();
+}</code></pre></div>
+</div></details></div><h2 id="implementors" class="section-header">Implementors<a href="#implementors" class="anchor">§</a></h2><div id="implementors-list"><details class="toggle implementors-toggle"><summary><section id="impl-ChatSession-for-BoxedChatSession" class="impl"><a class="src rightside" href="../src/kalosm_language_model/chat/boxed.rs.html#152-191">Source</a><a href="#impl-ChatSession-for-BoxedChatSession" class="anchor">§</a><h3 class="code-header">impl <a class="trait" href="trait.ChatSession.html" title="trait kalosm_language_model::ChatSession">ChatSession</a> for <a class="struct" href="struct.BoxedChatSession.html" title="struct kalosm_language_model::BoxedChatSession">BoxedChatSession</a></h3></section></summary><div class="impl-items"><section id="associatedtype.Error-1" class="associatedtype trait-impl"><a class="src rightside" href="../src/kalosm_language_model/chat/boxed.rs.html#153">Source</a><a href="#associatedtype.Error-1" class="anchor">§</a><h4 class="code-header">type <a href="#associatedtype.Error" class="associatedtype">Error</a> = <a class="struct" href="https://doc.rust-lang.org/1.87.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.87.0/core/error/trait.Error.html" title="trait core::error::Error">Error</a> + <a class="trait" href="https://doc.rust-lang.org/1.87.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> + <a class="trait" href="https://doc.rust-lang.org/1.87.0/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a>&gt;</h4></section></div></details></div><script src="../trait.impl/kalosm_language_model/chat/trait.ChatSession.js" async></script></section></div></main></body></html>

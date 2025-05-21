@@ -1,0 +1,1 @@
+searchState.loadedDescShard("rayon_cond", 0, "Experimental iterator wrapper that is conditionally …\nAn iterator that could be parallel or serial, with a …\nReturns the argument unchanged.\nCalls <code>U::from(self)</code>.")

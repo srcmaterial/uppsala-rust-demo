@@ -1,0 +1,81 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="The trait necessary to enable safetensors to serialize a tensor If you have an owned tensor like this:"><title>View in safetensors::tensor - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../static.files/rustdoc-916cea96.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="safetensors" data-themes="" data-resource-suffix="" data-rustdoc-version="1.87.0 (17067e9ac 2025-05-09)" data-channel="1.87.0" data-search-js="search-e7298875.js" data-settings-js="settings-d72f25bb.js" ><script src="../../static.files/storage-82c7156e.js"></script><script defer src="sidebar-items.js"></script><script defer src="../../static.files/main-fb8c74a8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-044be391.svg"></head><body class="rustdoc trait"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../../safetensors/index.html">safetensors</a><span class="version">0.4.5</span></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">View</a></h2><h3><a href="#required-methods">Required Methods</a></h3><ul class="block"><li><a href="#tymethod.data" title="data">data</a></li><li><a href="#tymethod.data_len" title="data_len">data_len</a></li><li><a href="#tymethod.dtype" title="dtype">dtype</a></li><li><a href="#tymethod.shape" title="shape">shape</a></li></ul><h3><a href="#implementors">Implementors</a></h3></section><div id="rustdoc-modnav"><h2><a href="index.html">In safetensors::<wbr>tensor</a></h2></div></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><div class="rustdoc-breadcrumbs"><a href="../index.html">safetensors</a>::<wbr><a href="index.html">tensor</a></div><h1>Trait <span class="trait">View</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../../src/safetensors/tensor.rs.html#154-165">Source</a> </span></div><pre class="rust item-decl"><code>pub trait View {
+    // Required methods
+    fn <a href="#tymethod.dtype" class="fn">dtype</a>(&amp;self) -&gt; <a class="enum" href="enum.Dtype.html" title="enum safetensors::tensor::Dtype">Dtype</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.shape" class="fn">shape</a>(&amp;self) -&gt; &amp;[<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.usize.html">usize</a>];
+<span class="item-spacer"></span>    fn <a href="#tymethod.data" class="fn">data</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/alloc/borrow/enum.Cow.html" title="enum alloc::borrow::Cow">Cow</a>&lt;'_, [<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.u8.html">u8</a>]&gt;;
+<span class="item-spacer"></span>    fn <a href="#tymethod.data_len" class="fn">data_len</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.usize.html">usize</a>;
+}</code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>The trait necessary to enable safetensors to serialize a tensor
+If you have an owned tensor like this:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>safetensors::tensor::{View, Dtype};
+<span class="kw">use </span>std::borrow::Cow;
+<span class="kw">struct </span>Tensor{ dtype: MyDtype, shape: Vec&lt;usize&gt;, data: Vec&lt;u8&gt;}
+
+<span class="kw">impl</span>&lt;<span class="lifetime">'data</span>&gt; View <span class="kw">for </span><span class="kw-2">&amp;</span><span class="lifetime">'data </span>Tensor{
+   <span class="kw">fn </span>dtype(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Dtype{
+       <span class="self">self</span>.dtype.into()
+   }
+   <span class="kw">fn </span>shape(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[usize]{
+        <span class="kw-2">&amp;</span><span class="self">self</span>.shape
+   }
+   <span class="kw">fn </span>data(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Cow&lt;[u8]&gt;{
+       (<span class="kw-2">&amp;</span><span class="self">self</span>.data).into()
+   }
+   <span class="kw">fn </span>data_len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize{
+       <span class="self">self</span>.data.len()
+   }
+}</code></pre></div>
+<p>For a borrowed tensor:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>safetensors::tensor::{View, Dtype};
+<span class="kw">use </span>std::borrow::Cow;
+<span class="kw">struct </span>Tensor&lt;<span class="lifetime">'data</span>&gt;{ dtype: MyDtype, shape: Vec&lt;usize&gt;, data: <span class="kw-2">&amp;</span><span class="lifetime">'data</span>[u8]}
+
+<span class="kw">impl</span>&lt;<span class="lifetime">'data</span>&gt; View <span class="kw">for </span>Tensor&lt;<span class="lifetime">'data</span>&gt;{
+   <span class="kw">fn </span>dtype(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Dtype{
+       <span class="self">self</span>.dtype.into()
+   }
+   <span class="kw">fn </span>shape(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[usize]{
+        <span class="kw-2">&amp;</span><span class="self">self</span>.shape
+   }
+   <span class="kw">fn </span>data(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Cow&lt;[u8]&gt;{
+       <span class="self">self</span>.data.into()
+   }
+   <span class="kw">fn </span>data_len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize{
+       <span class="self">self</span>.data.len()
+   }
+}</code></pre></div>
+<p>Now if you have some unknown buffer that could be on GPU for instance,
+you can implement the trait to return an owned local buffer containing the data
+on CPU (needed to write on disk)</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>safetensors::tensor::{View, Dtype};
+<span class="kw">use </span>std::borrow::Cow;
+
+<span class="kw">struct </span>Tensor{ dtype: MyDtype, shape: Vec&lt;usize&gt;, data: OpaqueGpu }
+
+<span class="kw">impl </span>View <span class="kw">for </span>Tensor{
+   <span class="kw">fn </span>dtype(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Dtype{
+       <span class="self">self</span>.dtype.into()
+   }
+   <span class="kw">fn </span>shape(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[usize]{
+        <span class="kw-2">&amp;</span><span class="self">self</span>.shape
+   }
+   <span class="kw">fn </span>data(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Cow&lt;[u8]&gt;{
+       <span class="comment">// This copies data from GPU to CPU.
+       </span><span class="kw">let </span>data: Vec&lt;u8&gt; = <span class="self">self</span>.data.to_vec();
+       data.into()
+   }
+   <span class="kw">fn </span>data_len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize{
+       <span class="kw">let </span>n: usize = <span class="self">self</span>.shape.iter().product();
+       <span class="kw">let </span>bytes_per_element = <span class="self">self</span>.dtype.size();
+       n * bytes_per_element
+   }
+}</code></pre></div>
+</div></details><h2 id="required-methods" class="section-header">Required Methods<a href="#required-methods" class="anchor">§</a></h2><div class="methods"><details class="toggle method-toggle" open><summary><section id="tymethod.dtype" class="method"><a class="src rightside" href="../../src/safetensors/tensor.rs.html#156">Source</a><h4 class="code-header">fn <a href="#tymethod.dtype" class="fn">dtype</a>(&amp;self) -&gt; <a class="enum" href="enum.Dtype.html" title="enum safetensors::tensor::Dtype">Dtype</a></h4></section></summary><div class="docblock"><p>The <code>Dtype</code> of the tensor</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.shape" class="method"><a class="src rightside" href="../../src/safetensors/tensor.rs.html#158">Source</a><h4 class="code-header">fn <a href="#tymethod.shape" class="fn">shape</a>(&amp;self) -&gt; &amp;[<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.usize.html">usize</a>]</h4></section></summary><div class="docblock"><p>The shape of the tensor</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.data" class="method"><a class="src rightside" href="../../src/safetensors/tensor.rs.html#160">Source</a><h4 class="code-header">fn <a href="#tymethod.data" class="fn">data</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/alloc/borrow/enum.Cow.html" title="enum alloc::borrow::Cow">Cow</a>&lt;'_, [<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.u8.html">u8</a>]&gt;</h4></section></summary><div class="docblock"><p>The data of the tensor</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.data_len" class="method"><a class="src rightside" href="../../src/safetensors/tensor.rs.html#164">Source</a><h4 class="code-header">fn <a href="#tymethod.data_len" class="fn">data_len</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.usize.html">usize</a></h4></section></summary><div class="docblock"><p>The length of the data, in bytes.
+This is necessary as this might be faster to get than <code>data().len()</code>
+for instance for tensors residing in GPU.</p>
+</div></details></div><h2 id="implementors" class="section-header">Implementors<a href="#implementors" class="anchor">§</a></h2><div id="implementors-list"><section id="impl-View-for-%26TensorView%3C'data%3E" class="impl"><a class="src rightside" href="../../src/safetensors/tensor.rs.html#565-581">Source</a><a href="#impl-View-for-%26TensorView%3C'data%3E" class="anchor">§</a><h3 class="code-header">impl&lt;'data&gt; <a class="trait" href="trait.View.html" title="trait safetensors::tensor::View">View</a> for &amp;<a class="struct" href="struct.TensorView.html" title="struct safetensors::tensor::TensorView">TensorView</a>&lt;'data&gt;</h3></section><section id="impl-View-for-TensorView%3C'data%3E" class="impl"><a class="src rightside" href="../../src/safetensors/tensor.rs.html#583-599">Source</a><a href="#impl-View-for-TensorView%3C'data%3E" class="anchor">§</a><h3 class="code-header">impl&lt;'data&gt; <a class="trait" href="trait.View.html" title="trait safetensors::tensor::View">View</a> for <a class="struct" href="struct.TensorView.html" title="struct safetensors::tensor::TensorView">TensorView</a>&lt;'data&gt;</h3></section></div><script src="../../trait.impl/safetensors/tensor/trait.View.js" async></script></section></div></main></body></html>

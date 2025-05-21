@@ -1,0 +1,1 @@
+searchState.loadedDescShard("esaxx_rs", 0, "Small wrapper around sentencepiece’s esaxx suffix array …\nReturns the argument unchanged.\nReturns the argument unchanged.\nCalls <code>U::from(self)</code>.\nCalls <code>U::from(self)</code>.\nCreates the suffix array and provides an iterator over its …\nCreates the suffix array and provides an iterator over its …")

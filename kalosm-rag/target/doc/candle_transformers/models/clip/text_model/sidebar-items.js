@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["Activation"],"struct":["ClipEncoder","ClipTextConfig","ClipTextTransformer"]};

@@ -6,7 +6,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 
 MODEL = "microsoft/speecht5_tts"
 processor = SpeechT5Processor.from_pretrained(MODEL)
-model = SpeechT5ForTextToSpeech.from_pretrained(MODEL).to(device)
+model = SpeechT5ForTextToSpeech.from_pretra    git push --set-upstream origin kalosmined(MODEL).to(device)
 vocoder = SpeechT5HifiGan.from_pretrained("microsoft/speecht5_hifigan").to(device)
 
 embeddings_dataset = load_dataset("Matthijs/cmu-arctic-xvectors", split="validation")

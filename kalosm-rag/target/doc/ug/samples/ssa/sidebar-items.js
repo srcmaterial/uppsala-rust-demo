@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["exp","exp_block","simple_add","simple_dotprod","softmax","softmax_barrier","softmax_block","softmax_reduce"]};

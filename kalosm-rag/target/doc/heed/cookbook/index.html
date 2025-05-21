@@ -1,0 +1,419 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="A cookbook of examples on how to use heed. Here is the list of the different topics you can learn about:"><title>heed::cookbook - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../static.files/rustdoc-916cea96.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="heed" data-themes="" data-resource-suffix="" data-rustdoc-version="1.87.0 (17067e9ac 2025-05-09)" data-channel="1.87.0" data-search-js="search-e7298875.js" data-settings-js="settings-d72f25bb.js" ><script src="../../static.files/storage-82c7156e.js"></script><script defer src="../sidebar-items.js"></script><script defer src="../../static.files/main-fb8c74a8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-893ab5e7.css"></noscript><link rel="icon" href="https://raw.githubusercontent.com/meilisearch/heed/main/assets/heed-pigeon.ico?raw=true"></head><body class="rustdoc mod"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button><a class="logo-container" href="../../heed/index.html"><img src="https://raw.githubusercontent.com/meilisearch/heed/main/assets/heed-pigeon-logo.png?raw=true" alt=""></a></nav><nav class="sidebar"><div class="sidebar-crate"><a class="logo-container" href="../../heed/index.html"><img src="https://raw.githubusercontent.com/meilisearch/heed/main/assets/heed-pigeon-logo.png?raw=true" alt="logo"></a><h2><a href="../../heed/index.html">heed</a><span class="version">0.20.5</span></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">Module cookbook</a></h2><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#decode-values-on-demand" title="Decode Values on Demand">Decode Values on Demand</a></li><li><a href="#listing-and-opening-the-named-databases" title="Listing and Opening the Named Databases">Listing and Opening the Named Databases</a></li><li><a href="#create-custom-and-prefix-codecs" title="Create Custom and Prefix Codecs">Create Custom and Prefix Codecs</a></li><li><a href="#change-the-environment-size-dynamically" title="Change the Environment Size Dynamically">Change the Environment Size Dynamically</a></li><li><a href="#advanced-multithreaded-access-of-entries" title="Advanced Multithreaded Access of Entries">Advanced Multithreaded Access of Entries</a></li></ul></section><div id="rustdoc-modnav"><h2 class="in-crate"><a href="../index.html">In crate heed</a></h2></div></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><div class="rustdoc-breadcrumbs"><a href="../index.html">heed</a></div><h1>Module <span>cookbook</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../../src/heed/cookbook.rs.html#1-452">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>A cookbook of examples on how to use heed. Here is the list of the different topics you can learn about:</p>
+<ul>
+<li><a href="#decode-values-on-demand">Decode Values on Demand</a></li>
+<li><a href="#listing-and-opening-the-named-databases">Listing and Opening the Named Databases</a></li>
+<li><a href="#create-custom-and-prefix-codecs">Create Custom and Prefix Codecs</a></li>
+<li><a href="#change-the-environment-size-dynamically">Change the Environment Size Dynamically</a></li>
+<li><a href="#advanced-multithreaded-access-of-entries">Advanced Multithreaded Access of Entries</a></li>
+</ul>
+<h2 id="decode-values-on-demand"><a class="doc-anchor" href="#decode-values-on-demand">§</a>Decode Values on Demand</h2>
+<p>Sometimes, you need to iterate on the content of a database and
+conditionnaly decode the value depending on the key. You can use the
+<a href="../struct.Database.html#method.lazily_decode_data" title="method heed::Database::lazily_decode_data"><code>Database::lazily_decode_data</code></a> method to indicate this to heed.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>std::collections::HashMap;
+<span class="kw">use </span>std::error::Error;
+<span class="kw">use </span>std::fs;
+<span class="kw">use </span>std::path::Path;
+
+<span class="kw">use </span>heed::types::<span class="kw-2">*</span>;
+<span class="kw">use </span>heed::{Database, EnvOpenOptions};
+
+<span class="kw">pub type </span>StringMap = HashMap&lt;String, String&gt;;
+
+<span class="kw">fn </span>main() -&gt; <span class="prelude-ty">Result</span>&lt;(), Box&lt;<span class="kw">dyn </span>Error + Send + Sync&gt;&gt; {
+    <span class="kw">let </span>path = Path::new(<span class="string">"target"</span>).join(<span class="string">"heed.mdb"</span>);
+
+    fs::create_dir_all(<span class="kw-2">&amp;</span>path)<span class="question-mark">?</span>;
+
+    <span class="kw">let </span>env = <span class="kw">unsafe </span>{
+        EnvOpenOptions::new()
+            .map_size(<span class="number">1024 </span>* <span class="number">1024 </span>* <span class="number">100</span>) <span class="comment">// 100 MiB
+            </span>.open(<span class="kw-2">&amp;</span>path)<span class="question-mark">?
+    </span>};
+
+    <span class="kw">let </span><span class="kw-2">mut </span>wtxn = env.write_txn()<span class="question-mark">?</span>;
+    <span class="kw">let </span>db: Database&lt;Str, SerdeJson&lt;StringMap&gt;&gt; = env.create_database(<span class="kw-2">&amp;mut </span>wtxn, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
+
+    fill_with_data(<span class="kw-2">&amp;mut </span>wtxn, db)<span class="question-mark">?</span>;
+
+    <span class="comment">// We make sure that iterating over this database will
+    // not deserialize the values. We just want to decode
+    // the value corresponding to 43th key.
+    </span><span class="kw">for </span>(i, result) <span class="kw">in </span>db.lazily_decode_data().iter(<span class="kw-2">&amp;</span>wtxn)<span class="question-mark">?</span>.enumerate() {
+        <span class="kw">let </span>(_key, lazy_value) = result<span class="question-mark">?</span>;
+        <span class="kw">if </span>i == <span class="number">43 </span>{
+            <span class="comment">// This is where the magic happens. We receive a Lazy type
+            // that wraps a slice of bytes. We can decode on purpose.
+            </span><span class="kw">let </span>value = lazy_value.decode()<span class="question-mark">?</span>;
+            <span class="macro">assert_eq!</span>(value.get(<span class="string">"secret"</span>), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>String::from(<span class="string">"434343"</span>)));
+            <span class="kw">break</span>;
+        }
+    }
+
+    <span class="prelude-val">Ok</span>(())
+}
+
+<span class="kw">fn </span>fill_with_data(
+    wtxn: <span class="kw-2">&amp;mut </span>heed::RwTxn,
+    db: Database&lt;Str, SerdeJson&lt;StringMap&gt;&gt;,
+) -&gt; heed::Result&lt;()&gt; {
+    <span class="comment">// This represents a very big value that we only want to decode when necessary.
+    </span><span class="kw">let </span><span class="kw-2">mut </span>big_string_map = HashMap::new();
+    big_string_map.insert(<span class="string">"key1"</span>.into(), <span class="string">"I am a very long string"</span>.into());
+    big_string_map.insert(<span class="string">"key2"</span>.into(), <span class="string">"I am a also very long string"</span>.into());
+
+    <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..<span class="number">100 </span>{
+        <span class="kw">let </span>key = <span class="macro">format!</span>(<span class="string">"{i:5}"</span>);
+        big_string_map.insert(<span class="string">"secret"</span>.into(), <span class="macro">format!</span>(<span class="string">"{i}{i}{i}"</span>));
+        db.put(wtxn, <span class="kw-2">&amp;</span>key, <span class="kw-2">&amp;</span>big_string_map)<span class="question-mark">?</span>;
+    }
+    <span class="prelude-val">Ok</span>(())
+}</code></pre></div>
+<h2 id="listing-and-opening-the-named-databases"><a class="doc-anchor" href="#listing-and-opening-the-named-databases">§</a>Listing and Opening the Named Databases</h2>
+<p>Sometimes it is useful to list the databases available in an environment.
+LMDB automatically stores their names in the unnamed database, a database that doesn’t
+need to be created in which you can write.</p>
+<p>Once you create new databases, after defining the <a href="../struct.EnvOpenOptions.html#method.max_dbs" title="method heed::EnvOpenOptions::max_dbs"><code>EnvOpenOptions::max_dbs</code></a>
+parameter, the names of those databases are automatically stored in the unnamed one.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>std::error::Error;
+<span class="kw">use </span>std::fs;
+<span class="kw">use </span>std::path::Path;
+
+<span class="kw">use </span>heed::types::<span class="kw-2">*</span>;
+<span class="kw">use </span>heed::{Database, EnvOpenOptions};
+
+<span class="kw">fn </span>main() -&gt; <span class="prelude-ty">Result</span>&lt;(), Box&lt;<span class="kw">dyn </span>Error&gt;&gt; {
+    <span class="kw">let </span>env_path = Path::new(<span class="string">"target"</span>).join(<span class="string">"heed.mdb"</span>);
+
+    fs::create_dir_all(<span class="kw-2">&amp;</span>env_path)<span class="question-mark">?</span>;
+
+    <span class="kw">let </span>env = <span class="kw">unsafe </span>{
+        EnvOpenOptions::new()
+            .map_size(<span class="number">10 </span>* <span class="number">1024 </span>* <span class="number">1024</span>) <span class="comment">// 10MB
+            </span>.max_dbs(<span class="number">3</span>) <span class="comment">// Number of opened databases
+            </span>.open(env_path)<span class="question-mark">?
+    </span>};
+
+    <span class="kw">let </span>rtxn = env.read_txn()<span class="question-mark">?</span>;
+    <span class="comment">// The database names are mixed with the user entries therefore we prefer
+    // ignoring the values and try to open the databases one by one using the keys.
+    </span><span class="kw">let </span>unnamed: Database&lt;Str, DecodeIgnore&gt; =
+        env.open_database(<span class="kw-2">&amp;</span>rtxn, <span class="prelude-val">None</span>)<span class="question-mark">?</span>.expect(<span class="string">"the unnamed database always exists"</span>);
+
+    <span class="comment">// The unnamed (or main) database contains the other
+    // database names associated to empty values.
+    </span><span class="kw">for </span>result <span class="kw">in </span>unnamed.iter(<span class="kw-2">&amp;</span>rtxn)<span class="question-mark">? </span>{
+        <span class="kw">let </span>(name, ()) = result<span class="question-mark">?</span>;
+
+        <span class="kw">if let </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(_db)) = env.open_database::&lt;Str, Bytes&gt;(<span class="kw-2">&amp;</span>rtxn, <span class="prelude-val">Some</span>(name)) {
+            <span class="comment">// We succeeded into opening a new database that
+            // contains strings associated to raw bytes.
+        </span>}
+    }
+
+    <span class="comment">// When opening databases in a read-only transaction
+    // you must commit your read transaction to make your
+    // freshly opened databases globally available.
+    </span>rtxn.commit()<span class="question-mark">?</span>;
+
+    <span class="comment">// If you abort (or drop) your read-only transaction
+    // the database handle will be invalid outside
+    // the transaction scope.
+
+    </span><span class="prelude-val">Ok</span>(())
+}</code></pre></div>
+<h2 id="create-custom-and-prefix-codecs"><a class="doc-anchor" href="#create-custom-and-prefix-codecs">§</a>Create Custom and Prefix Codecs</h2>
+<p>With heed you can store any kind of data and serialize it the way you want.
+To do so you’ll need to create a codec by using the <a href="../trait.BytesEncode.html" title="trait heed::BytesEncode"><code>BytesEncode</code></a> and <a href="../trait.BytesDecode.html" title="trait heed::BytesDecode"><code>BytesDecode</code></a> traits.</p>
+<p>Now imagine that your data is lexicographically well ordered. You can now leverage
+the use of prefix codecs. Those are classic codecs but are only used to encode key prefixes.</p>
+<p>In this example we will store logs associated to a timestamp. By encoding the timestamp
+in big endian we can create a prefix codec that restricts a subset of the data. It is recommended
+to create codecs to encode prefixes when possible instead of using a slice of bytes.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>std::borrow::Cow;
+<span class="kw">use </span>std::error::Error;
+<span class="kw">use </span>std::fs;
+<span class="kw">use </span>std::path::Path;
+
+<span class="kw">use </span>heed::types::<span class="kw-2">*</span>;
+<span class="kw">use </span>heed::{BoxedError, BytesDecode, BytesEncode, Database, EnvOpenOptions};
+
+<span class="attr">#[derive(Debug, PartialEq, Eq)]
+</span><span class="kw">pub enum </span>Level {
+    Debug,
+    Warn,
+    Error,
+}
+
+<span class="attr">#[derive(Debug, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>LogKey {
+    timestamp: u32,
+    level: Level,
+}
+
+<span class="kw">pub struct </span>LogKeyCodec;
+
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; BytesEncode&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span>LogKeyCodec {
+    <span class="kw">type </span>EItem = LogKey;
+
+    <span class="doccomment">/// Encodes the u32 timestamp in big endian followed by the log level with a single byte.
+    </span><span class="kw">fn </span>bytes_encode(log: <span class="kw-2">&amp;</span><span class="self">Self</span>::EItem) -&gt; <span class="prelude-ty">Result</span>&lt;Cow&lt;[u8]&gt;, BoxedError&gt; {
+        <span class="kw">let </span>(timestamp_bytes, level_byte) = <span class="kw">match </span>log {
+            LogKey { timestamp, level: Level::Debug } =&gt; (timestamp.to_be_bytes(), <span class="number">0</span>),
+            LogKey { timestamp, level: Level::Warn } =&gt; (timestamp.to_be_bytes(), <span class="number">1</span>),
+            LogKey { timestamp, level: Level::Error } =&gt; (timestamp.to_be_bytes(), <span class="number">2</span>),
+        };
+
+        <span class="kw">let </span><span class="kw-2">mut </span>output = Vec::new();
+        output.extend_from_slice(<span class="kw-2">&amp;</span>timestamp_bytes);
+        output.push(level_byte);
+        <span class="prelude-val">Ok</span>(Cow::Owned(output))
+    }
+}
+
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; BytesDecode&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span>LogKeyCodec {
+    <span class="kw">type </span>DItem = LogKey;
+
+    <span class="kw">fn </span>bytes_decode(bytes: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[u8]) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::DItem, BoxedError&gt; {
+        <span class="kw">use </span>std::mem::size_of;
+
+        <span class="kw">let </span>timestamp = <span class="kw">match </span>bytes.get(..size_of::&lt;u32&gt;()) {
+            <span class="prelude-val">Some</span>(bytes) =&gt; bytes.try_into().map(u32::from_be_bytes).unwrap(),
+            <span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">"invalid log key: cannot extract timestamp"</span>.into()),
+        };
+
+        <span class="kw">let </span>level = <span class="kw">match </span>bytes.get(size_of::&lt;u32&gt;()) {
+            <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="number">0</span>) =&gt; Level::Debug,
+            <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="number">1</span>) =&gt; Level::Warn,
+            <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="number">2</span>) =&gt; Level::Error,
+            <span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">"invalid log key: invalid log level"</span>.into()),
+            <span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">"invalid log key: cannot extract log level"</span>.into()),
+        };
+
+        <span class="prelude-val">Ok</span>(LogKey { timestamp, level })
+    }
+}
+
+<span class="doccomment">/// Encodes the high part of a timestamp. As it is located
+/// at the start of the key it can be used to only return
+/// the logs that appeared during a, rather long, period.
+</span><span class="kw">pub struct </span>LogAtHalfTimestampCodec;
+
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; BytesEncode&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span>LogAtHalfTimestampCodec {
+    <span class="kw">type </span>EItem = u32;
+
+    <span class="doccomment">/// This method encodes only the prefix of the keys in this particular case, the timestamp.
+    </span><span class="kw">fn </span>bytes_encode(half_timestamp: <span class="kw-2">&amp;</span><span class="self">Self</span>::EItem) -&gt; <span class="prelude-ty">Result</span>&lt;Cow&lt;[u8]&gt;, BoxedError&gt; {
+        <span class="prelude-val">Ok</span>(Cow::Owned(half_timestamp.to_be_bytes()[..<span class="number">2</span>].to_vec()))
+    }
+}
+
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; BytesDecode&lt;<span class="lifetime">'a</span>&gt; <span class="kw">for </span>LogAtHalfTimestampCodec {
+    <span class="kw">type </span>DItem = LogKey;
+
+    <span class="kw">fn </span>bytes_decode(bytes: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[u8]) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::DItem, BoxedError&gt; {
+        LogKeyCodec::bytes_decode(bytes)
+    }
+}
+
+<span class="kw">fn </span>main() -&gt; <span class="prelude-ty">Result</span>&lt;(), Box&lt;<span class="kw">dyn </span>Error&gt;&gt; {
+    <span class="kw">let </span>path = Path::new(<span class="string">"target"</span>).join(<span class="string">"heed.mdb"</span>);
+
+    fs::create_dir_all(<span class="kw-2">&amp;</span>path)<span class="question-mark">?</span>;
+
+    <span class="kw">let </span>env = <span class="kw">unsafe </span>{
+        EnvOpenOptions::new()
+            .map_size(<span class="number">10 </span>* <span class="number">1024 </span>* <span class="number">1024</span>) <span class="comment">// 10MB
+            </span>.max_dbs(<span class="number">3000</span>)
+            .open(path)<span class="question-mark">?
+    </span>};
+
+    <span class="kw">let </span><span class="kw-2">mut </span>wtxn = env.write_txn()<span class="question-mark">?</span>;
+    <span class="kw">let </span>db: Database&lt;LogKeyCodec, Str&gt; = env.create_database(<span class="kw-2">&amp;mut </span>wtxn, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
+
+    db.put(
+        <span class="kw-2">&amp;mut </span>wtxn,
+        <span class="kw-2">&amp;</span>LogKey { timestamp: <span class="number">1608326232</span>, level: Level::Debug },
+        <span class="string">"this is a very old log"</span>,
+    )<span class="question-mark">?</span>;
+    db.put(
+        <span class="kw-2">&amp;mut </span>wtxn,
+        <span class="kw-2">&amp;</span>LogKey { timestamp: <span class="number">1708326232</span>, level: Level::Debug },
+        <span class="string">"fibonacci was executed in 21ms"</span>,
+    )<span class="question-mark">?</span>;
+    db.put(<span class="kw-2">&amp;mut </span>wtxn, <span class="kw-2">&amp;</span>LogKey { timestamp: <span class="number">1708326242</span>, level: Level::Error }, <span class="string">"fibonacci crashed"</span>)<span class="question-mark">?</span>;
+    db.put(
+        <span class="kw-2">&amp;mut </span>wtxn,
+        <span class="kw-2">&amp;</span>LogKey { timestamp: <span class="number">1708326272</span>, level: Level::Warn },
+        <span class="string">"fibonacci is running since 12s"</span>,
+    )<span class="question-mark">?</span>;
+
+    <span class="comment">// We change the way we want to read our database by changing the key codec.
+    // In this example we can prefix search only for the logs between a period of time
+    // (the two high bytes of the u32 timestamp).
+    </span><span class="kw">let </span>iter = db.remap_key_type::&lt;LogAtHalfTimestampCodec&gt;().prefix_iter(<span class="kw-2">&amp;</span>wtxn, <span class="kw-2">&amp;</span><span class="number">1708326232</span>)<span class="question-mark">?</span>;
+
+    <span class="comment">// As we filtered the log for a specific
+    // period of time we must not see the very old log.
+    </span><span class="kw">for </span>result <span class="kw">in </span>iter {
+        <span class="kw">let </span>(LogKey { timestamp: <span class="kw">_</span>, level: <span class="kw">_ </span>}, content) = result<span class="question-mark">?</span>;
+        <span class="macro">assert_ne!</span>(content, <span class="string">"this is a very old log"</span>);
+    }
+
+    <span class="prelude-val">Ok</span>(())
+}</code></pre></div>
+<h2 id="change-the-environment-size-dynamically"><a class="doc-anchor" href="#change-the-environment-size-dynamically">§</a>Change the Environment Size Dynamically</h2>
+<p>You must specify the maximum size of an LMDB environment when you open it.
+Environment do not dynamically increase there size for performance reasons and also to
+have more control on it.</p>
+<p>Here is a simple example on the way to go to dynamically increase the size
+of an environment when you detect that it is going out of space.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>std::error::Error;
+<span class="kw">use </span>std::fs;
+<span class="kw">use </span>std::path::Path;
+
+<span class="kw">use </span>heed::types::<span class="kw-2">*</span>;
+<span class="kw">use </span>heed::{Database, EnvOpenOptions};
+
+<span class="kw">fn </span>main() -&gt; <span class="prelude-ty">Result</span>&lt;(), Box&lt;<span class="kw">dyn </span>Error&gt;&gt; {
+    <span class="kw">let </span>path = Path::new(<span class="string">"target"</span>).join(<span class="string">"small-space.mdb"</span>);
+
+    fs::create_dir_all(<span class="kw-2">&amp;</span>path)<span class="question-mark">?</span>;
+
+    <span class="kw">let </span>env = <span class="kw">unsafe </span>{
+        EnvOpenOptions::new()
+            .map_size(<span class="number">16384</span>) <span class="comment">// one page
+            </span>.open(<span class="kw-2">&amp;</span>path)<span class="question-mark">?
+    </span>};
+
+    <span class="kw">let </span><span class="kw-2">mut </span>wtxn = env.write_txn()<span class="question-mark">?</span>;
+    <span class="kw">let </span>db: Database&lt;Str, Str&gt; = env.create_database(<span class="kw-2">&amp;mut </span>wtxn, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
+
+    <span class="comment">// Ho! Crap! We don't have enough space in this environment...
+    </span><span class="macro">assert!</span>(<span class="macro">matches!</span>(
+        fill_with_data(<span class="kw-2">&amp;mut </span>wtxn, db),
+        <span class="prelude-val">Err</span>(heed::Error::Mdb(heed::MdbError::MapFull))
+    ));
+
+    drop(wtxn);
+
+    <span class="comment">// We need to increase the page size and we can only do that
+    // when no transaction are running so closing the env is easier.
+    </span>env.prepare_for_closing().wait();
+
+    <span class="kw">let </span>env = <span class="kw">unsafe </span>{
+        EnvOpenOptions::new()
+            .map_size(<span class="number">10 </span>* <span class="number">16384</span>) <span class="comment">// 10 pages
+            </span>.open(<span class="kw-2">&amp;</span>path)<span class="question-mark">?
+    </span>};
+
+    <span class="kw">let </span><span class="kw-2">mut </span>wtxn = env.write_txn()<span class="question-mark">?</span>;
+    <span class="kw">let </span>db: Database&lt;Str, Str&gt; = env.create_database(<span class="kw-2">&amp;mut </span>wtxn, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
+
+    <span class="comment">// We now have enough space in the env to store all of our entries.
+    </span><span class="macro">assert!</span>(<span class="macro">matches!</span>(fill_with_data(<span class="kw-2">&amp;mut </span>wtxn, db), <span class="prelude-val">Ok</span>(())));
+
+    <span class="prelude-val">Ok</span>(())
+}
+
+<span class="kw">fn </span>fill_with_data(wtxn: <span class="kw-2">&amp;mut </span>heed::RwTxn, db: Database&lt;Str, Str&gt;) -&gt; heed::Result&lt;()&gt; {
+    <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..<span class="number">1000 </span>{
+        <span class="kw">let </span>key = i.to_string();
+        db.put(wtxn, <span class="kw-2">&amp;</span>key, <span class="string">"I am a very long string"</span>)<span class="question-mark">?</span>;
+    }
+    <span class="prelude-val">Ok</span>(())
+}</code></pre></div>
+<h2 id="advanced-multithreaded-access-of-entries"><a class="doc-anchor" href="#advanced-multithreaded-access-of-entries">§</a>Advanced Multithreaded Access of Entries</h2>
+<p>LMDB disallow sharing cursors amongs threads. It is only possible to send
+them between threads when the heed <code>read-txn-no-tls</code> feature is enabled.</p>
+<p>This limits some usecases that require a parallel access to the content of the databases
+to process stuff faster. This is the case of arroy, a multithreads fast approximate
+neighbors search library. I wrote <a href="https://blog.kerollmops.com/multithreading-and-memory-mapping-refining-ann-performance-with-arroy">an article explaining how
+to read entries in parallel</a>.</p>
+<p>It is forbidden to write in an environement while reading in it. However, it is possible
+to keep pointers to the values of the entries returned by LMDB. Those pointers are valid
+until the end of the transaction.</p>
+<p>Here is a small example on how to declare a datastructure to be used in parallel across thread,
+safely. The unsafe part declare that the datastructure can be shared between thread despite
+the write transaction not being <code>Send</code> nor <code>Sync</code>.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>std::collections::HashMap;
+<span class="kw">use </span>std::error::Error;
+<span class="kw">use </span>std::fs;
+<span class="kw">use </span>std::path::Path;
+
+<span class="kw">use </span>heed::types::<span class="kw-2">*</span>;
+<span class="kw">use </span>heed::{Database, EnvOpenOptions, RoTxn};
+
+<span class="kw">fn </span>main() -&gt; <span class="prelude-ty">Result</span>&lt;(), Box&lt;<span class="kw">dyn </span>Error + Send + Sync&gt;&gt; {
+    <span class="kw">let </span>path = Path::new(<span class="string">"target"</span>).join(<span class="string">"heed.mdb"</span>);
+
+    fs::create_dir_all(<span class="kw-2">&amp;</span>path)<span class="question-mark">?</span>;
+
+    <span class="kw">let </span>env = <span class="kw">unsafe </span>{
+        EnvOpenOptions::new()
+            .map_size(<span class="number">1024 </span>* <span class="number">1024 </span>* <span class="number">100</span>) <span class="comment">// 100 MiB
+            </span>.open(<span class="kw-2">&amp;</span>path)<span class="question-mark">?
+    </span>};
+
+    <span class="kw">let </span><span class="kw-2">mut </span>wtxn = env.write_txn()<span class="question-mark">?</span>;
+    <span class="kw">let </span>db: Database&lt;Str, Str&gt; = env.create_database(<span class="kw-2">&amp;mut </span>wtxn, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
+
+    fill_with_data(<span class="kw-2">&amp;mut </span>wtxn, db)<span class="question-mark">?</span>;
+
+    <span class="kw">let </span>immutable_map = ImmutableMap::from_db(<span class="kw-2">&amp;</span>wtxn, db)<span class="question-mark">?</span>;
+
+    <span class="comment">// We can share the immutable map over multiple threads because it is Sync.
+    // It is safe because we keep the write transaction lifetime in this type.
+    </span>std::thread::scope(|s| {
+        s.spawn(|| {
+            <span class="kw">let </span>value = immutable_map.get(<span class="string">"10"</span>);
+            <span class="macro">assert_eq!</span>(value, <span class="prelude-val">Some</span>(<span class="string">"I am a very long string"</span>));
+        });
+        s.spawn(|| {
+            <span class="kw">let </span>value = immutable_map.get(<span class="string">"20"</span>);
+            <span class="macro">assert_eq!</span>(value, <span class="prelude-val">Some</span>(<span class="string">"I am a very long string"</span>));
+        });
+    });
+
+    <span class="comment">// You can see that we always have it on the main thread.
+    // We didn't sent it over threads.
+    </span><span class="kw">let </span>value = immutable_map.get(<span class="string">"50"</span>);
+    <span class="macro">assert_eq!</span>(value, <span class="prelude-val">Some</span>(<span class="string">"I am a very long string"</span>));
+
+    <span class="prelude-val">Ok</span>(())
+}
+
+<span class="kw">fn </span>fill_with_data(wtxn: <span class="kw-2">&amp;mut </span>heed::RwTxn, db: Database&lt;Str, Str&gt;) -&gt; heed::Result&lt;()&gt; {
+    <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..<span class="number">100 </span>{
+        <span class="kw">let </span>key = i.to_string();
+        db.put(wtxn, <span class="kw-2">&amp;</span>key, <span class="string">"I am a very long string"</span>)<span class="question-mark">?</span>;
+    }
+    <span class="prelude-val">Ok</span>(())
+}
+
+<span class="kw">struct </span>ImmutableMap&lt;<span class="lifetime">'a</span>&gt; {
+    map: HashMap&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str, <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;,
+}
+
+<span class="kw">impl</span>&lt;<span class="lifetime">'t</span>&gt; ImmutableMap&lt;<span class="lifetime">'t</span>&gt; {
+    <span class="kw">fn </span>from_db(rtxn: <span class="kw-2">&amp;</span><span class="lifetime">'t </span>RoTxn, db: Database&lt;Str, Str&gt;) -&gt; heed::Result&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>map = HashMap::new();
+        <span class="kw">for </span>result <span class="kw">in </span>db.iter(rtxn)<span class="question-mark">? </span>{
+            <span class="kw">let </span>(k, v) = result<span class="question-mark">?</span>;
+            map.insert(k, v);
+        }
+        <span class="prelude-val">Ok</span>(ImmutableMap { map })
+    }
+
+    <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'t </span>str&gt; {
+        <span class="self">self</span>.map.get(key).copied()
+    }
+}
+
+<span class="kw">unsafe impl </span>Sync <span class="kw">for </span>ImmutableMap&lt;<span class="lifetime">'_</span>&gt; {}</code></pre></div>
+</div></details></section></div></main></body></html>

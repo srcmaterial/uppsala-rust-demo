@@ -1,0 +1,1 @@
+searchState.loadedDescShard("spm_precompiled", 0, "This crate aims to emulate …\nThis struct is specifically done to be compatible with …\nReturns the argument unchanged.\nReturns the argument unchanged.\nReturns the argument unchanged.\nCalls <code>U::from(self)</code>.\nCalls <code>U::from(self)</code>.\nCalls <code>U::from(self)</code>.")

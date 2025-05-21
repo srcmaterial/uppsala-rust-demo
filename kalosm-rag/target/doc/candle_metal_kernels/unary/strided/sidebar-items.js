@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":["abs","ceil","copy","cos","erf","exp","floor","gelu","gelu_erf","log","neg","recip","relu","round","sigmoid","sign","silu","sin","sqr","sqrt","tanh"],"struct":["Kernel"]};

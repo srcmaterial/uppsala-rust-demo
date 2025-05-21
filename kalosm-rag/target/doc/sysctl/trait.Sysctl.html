@@ -1,0 +1,155 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `Sysctl` trait in crate `sysctl`."><title>Sysctl in sysctl - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-916cea96.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="sysctl" data-themes="" data-resource-suffix="" data-rustdoc-version="1.87.0 (17067e9ac 2025-05-09)" data-channel="1.87.0" data-search-js="search-e7298875.js" data-settings-js="settings-d72f25bb.js" ><script src="../static.files/storage-82c7156e.js"></script><script defer src="sidebar-items.js"></script><script defer src="../static.files/main-fb8c74a8.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc trait"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../sysctl/index.html">sysctl</a><span class="version">0.6.0</span></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">Sysctl</a></h2><h3><a href="#required-methods">Required Methods</a></h3><ul class="block"><li><a href="#tymethod.description" title="description">description</a></li><li><a href="#tymethod.flags" title="flags">flags</a></li><li><a href="#tymethod.info" title="info">info</a></li><li><a href="#tymethod.name" title="name">name</a></li><li><a href="#tymethod.new" title="new">new</a></li><li><a href="#tymethod.new_with_type" title="new_with_type">new_with_type</a></li><li><a href="#tymethod.set_value" title="set_value">set_value</a></li><li><a href="#tymethod.set_value_string" title="set_value_string">set_value_string</a></li><li><a href="#tymethod.value" title="value">value</a></li><li><a href="#tymethod.value_as" title="value_as">value_as</a></li><li><a href="#tymethod.value_string" title="value_string">value_string</a></li><li><a href="#tymethod.value_type" title="value_type">value_type</a></li></ul><h3><a href="#dyn-compatibility">Dyn Compatibility</a></h3><h3><a href="#implementors">Implementors</a></h3></section><div id="rustdoc-modnav"><h2 class="in-crate"><a href="index.html">In crate sysctl</a></h2></div></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><div class="rustdoc-breadcrumbs"><a href="index.html">sysctl</a></div><h1>Trait <span class="trait">Sysctl</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/sysctl/traits.rs.html#9-224">Source</a> </span></div><pre class="rust item-decl"><code>pub trait Sysctl {
+    // Required methods
+    fn <a href="#tymethod.new" class="fn">new</a>(name: &amp;<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.str.html">str</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Self, <a class="enum" href="enum.SysctlError.html" title="enum sysctl::SysctlError">SysctlError</a>&gt;
+       <span class="where">where Self: <a class="trait" href="https://doc.rust-lang.org/1.87.0/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a></span>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.new_with_type" class="fn">new_with_type</a>(
+        name: &amp;<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.str.html">str</a>,
+        ctl_type: <a class="enum" href="enum.CtlType.html" title="enum sysctl::CtlType">CtlType</a>,
+        fmt: &amp;<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.str.html">str</a>,
+    ) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Self, <a class="enum" href="enum.SysctlError.html" title="enum sysctl::SysctlError">SysctlError</a>&gt;
+       <span class="where">where Self: <a class="trait" href="https://doc.rust-lang.org/1.87.0/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a></span>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.name" class="fn">name</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.87.0/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>, <a class="enum" href="enum.SysctlError.html" title="enum sysctl::SysctlError">SysctlError</a>&gt;;
+<span class="item-spacer"></span>    fn <a href="#tymethod.value_type" class="fn">value_type</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="enum" href="enum.CtlType.html" title="enum sysctl::CtlType">CtlType</a>, <a class="enum" href="enum.SysctlError.html" title="enum sysctl::SysctlError">SysctlError</a>&gt;;
+<span class="item-spacer"></span>    fn <a href="#tymethod.description" class="fn">description</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.87.0/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>, <a class="enum" href="enum.SysctlError.html" title="enum sysctl::SysctlError">SysctlError</a>&gt;;
+<span class="item-spacer"></span>    fn <a href="#tymethod.value" class="fn">value</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="enum" href="enum.CtlValue.html" title="enum sysctl::CtlValue">CtlValue</a>, <a class="enum" href="enum.SysctlError.html" title="enum sysctl::SysctlError">SysctlError</a>&gt;;
+<span class="item-spacer"></span>    fn <a href="#tymethod.value_as" class="fn">value_as</a>&lt;T&gt;(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.87.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;T&gt;, <a class="enum" href="enum.SysctlError.html" title="enum sysctl::SysctlError">SysctlError</a>&gt;;
+<span class="item-spacer"></span>    fn <a href="#tymethod.value_string" class="fn">value_string</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.87.0/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>, <a class="enum" href="enum.SysctlError.html" title="enum sysctl::SysctlError">SysctlError</a>&gt;;
+<span class="item-spacer"></span>    fn <a href="#tymethod.set_value" class="fn">set_value</a>(&amp;self, value: <a class="enum" href="enum.CtlValue.html" title="enum sysctl::CtlValue">CtlValue</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="enum" href="enum.CtlValue.html" title="enum sysctl::CtlValue">CtlValue</a>, <a class="enum" href="enum.SysctlError.html" title="enum sysctl::SysctlError">SysctlError</a>&gt;;
+<span class="item-spacer"></span>    fn <a href="#tymethod.set_value_string" class="fn">set_value_string</a>(&amp;self, value: &amp;<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.str.html">str</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.87.0/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>, <a class="enum" href="enum.SysctlError.html" title="enum sysctl::SysctlError">SysctlError</a>&gt;;
+<span class="item-spacer"></span>    fn <a href="#tymethod.flags" class="fn">flags</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="struct.CtlFlags.html" title="struct sysctl::CtlFlags">CtlFlags</a>, <a class="enum" href="enum.SysctlError.html" title="enum sysctl::SysctlError">SysctlError</a>&gt;;
+<span class="item-spacer"></span>    fn <a href="#tymethod.info" class="fn">info</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="struct.CtlInfo.html" title="struct sysctl::CtlInfo">CtlInfo</a>, <a class="enum" href="enum.SysctlError.html" title="enum sysctl::SysctlError">SysctlError</a>&gt;;
+}</code></pre><h2 id="required-methods" class="section-header">Required Methods<a href="#required-methods" class="anchor">§</a></h2><div class="methods"><details class="toggle method-toggle" open><summary><section id="tymethod.new" class="method"><a class="src rightside" href="../src/sysctl/traits.rs.html#33-35">Source</a><h4 class="code-header">fn <a href="#tymethod.new" class="fn">new</a>(name: &amp;<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.str.html">str</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Self, <a class="enum" href="enum.SysctlError.html" title="enum sysctl::SysctlError">SysctlError</a>&gt;<div class="where">where
+    Self: <a class="trait" href="https://doc.rust-lang.org/1.87.0/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a>,</div></h4></section></summary><div class="docblock"><p>Construct a Ctl from the name.</p>
+<p>Returns a result containing the struct Ctl on success or a SysctlError
+on failure.</p>
+<h5 id="example"><a class="doc-anchor" href="#example">§</a>Example</h5>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span>ctl = sysctl::Ctl::new(<span class="string">"kern.ostype"</span>);</code></pre></div>
+<p>If the sysctl does not exist, <code>Err(SysctlError::NotFound)</code> is returned.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span>ctl = sysctl::Ctl::new(<span class="string">"this.sysctl.does.not.exist"</span>);
+<span class="kw">match </span>ctl {
+    <span class="prelude-val">Err</span>(sysctl::SysctlError::NotFound(<span class="kw">_</span>)) =&gt; (),
+    <span class="prelude-val">Err</span>(e) =&gt; <span class="macro">panic!</span>(<span class="macro">format!</span>(<span class="string">"Wrong error type returned: {:?}"</span>, e)),
+    <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="macro">panic!</span>(<span class="string">"Nonexistent sysctl seems to exist"</span>),
+}</code></pre></div>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.new_with_type" class="method"><a class="src rightside" href="../src/sysctl/traits.rs.html#60-62">Source</a><h4 class="code-header">fn <a href="#tymethod.new_with_type" class="fn">new_with_type</a>(
+    name: &amp;<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.str.html">str</a>,
+    ctl_type: <a class="enum" href="enum.CtlType.html" title="enum sysctl::CtlType">CtlType</a>,
+    fmt: &amp;<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.str.html">str</a>,
+) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Self, <a class="enum" href="enum.SysctlError.html" title="enum sysctl::SysctlError">SysctlError</a>&gt;<div class="where">where
+    Self: <a class="trait" href="https://doc.rust-lang.org/1.87.0/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a>,</div></h4></section></summary><div class="docblock"><p>Construct a Ctl from the name, type and format.</p>
+<p>Returns a result containing the struct Ctl on success or a SysctlError
+on failure.</p>
+<h5 id="example-1"><a class="doc-anchor" href="#example-1">§</a>Example</h5>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span>ctl = sysctl::Ctl::new_with_type(<span class="string">"kern.ostype"</span>, CtlType::String, <span class="string">""</span>);</code></pre></div>
+<p>If the sysctl does not exist, <code>Err(SysctlError::NotFound)</code> is returned.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span>ctl = sysctl::Ctl::new_with_type(<span class="string">"this.sysctl.does.not.exist"</span>, CtlType::String, <span class="string">""</span>);
+<span class="kw">match </span>ctl {
+    <span class="prelude-val">Err</span>(sysctl::SysctlError::NotFound(<span class="kw">_</span>)) =&gt; (),
+    <span class="prelude-val">Err</span>(e) =&gt; <span class="macro">panic!</span>(<span class="string">"Wrong error type returned: {:?}"</span>, e),
+    <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="macro">panic!</span>(<span class="string">"Nonexistent sysctl seems to exist"</span>),
+}</code></pre></div>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.name" class="method"><a class="src rightside" href="../src/sysctl/traits.rs.html#74">Source</a><h4 class="code-header">fn <a href="#tymethod.name" class="fn">name</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.87.0/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>, <a class="enum" href="enum.SysctlError.html" title="enum sysctl::SysctlError">SysctlError</a>&gt;</h4></section></summary><div class="docblock"><p>Returns a result containing the sysctl name on success, or a
+SysctlError on failure.</p>
+<h5 id="example-2"><a class="doc-anchor" href="#example-2">§</a>Example</h5>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">if let </span><span class="prelude-val">Ok</span>(ctl) = sysctl::Ctl::new(<span class="string">"kern.ostype"</span>) {
+    <span class="macro">assert_eq!</span>(ctl.name().unwrap(), <span class="string">"kern.ostype"</span>);
+}</code></pre></div>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.value_type" class="method"><a class="src rightside" href="../src/sysctl/traits.rs.html#88">Source</a><h4 class="code-header">fn <a href="#tymethod.value_type" class="fn">value_type</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="enum" href="enum.CtlType.html" title="enum sysctl::CtlType">CtlType</a>, <a class="enum" href="enum.SysctlError.html" title="enum sysctl::SysctlError">SysctlError</a>&gt;</h4></section></summary><div class="docblock"><p>Returns a result containing the sysctl value type on success,
+or a Sysctl Error on failure.</p>
+<h5 id="example-3"><a class="doc-anchor" href="#example-3">§</a>Example</h5>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">if let </span><span class="prelude-val">Ok</span>(ctl) = sysctl::Ctl::new(<span class="string">"kern.ostype"</span>) {
+    <span class="kw">let </span>value_type = ctl.value_type().unwrap();
+    <span class="macro">assert_eq!</span>(value_type, sysctl::CtlType::String);
+}</code></pre></div>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.description" class="method"><a class="src rightside" href="../src/sysctl/traits.rs.html#100">Source</a><h4 class="code-header">fn <a href="#tymethod.description" class="fn">description</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.87.0/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>, <a class="enum" href="enum.SysctlError.html" title="enum sysctl::SysctlError">SysctlError</a>&gt;</h4></section></summary><div class="docblock"><p>Returns a result containing the sysctl description if success, or an
+Error on failure.</p>
+<h5 id="example-4"><a class="doc-anchor" href="#example-4">§</a>Example</h5>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">if let </span><span class="prelude-val">Ok</span>(ctl) = sysctl::Ctl::new(<span class="string">"kern.ostype"</span>) {
+    <span class="macro">println!</span>(<span class="string">"Description: {:?}"</span>, ctl.description())
+}</code></pre></div>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.value" class="method"><a class="src rightside" href="../src/sysctl/traits.rs.html#112">Source</a><h4 class="code-header">fn <a href="#tymethod.value" class="fn">value</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="enum" href="enum.CtlValue.html" title="enum sysctl::CtlValue">CtlValue</a>, <a class="enum" href="enum.SysctlError.html" title="enum sysctl::SysctlError">SysctlError</a>&gt;</h4></section></summary><div class="docblock"><p>Returns a result containing the sysctl value on success, or a
+SysctlError on failure.</p>
+<h5 id="example-5"><a class="doc-anchor" href="#example-5">§</a>Example</h5>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">if let </span><span class="prelude-val">Ok</span>(ctl) = sysctl::Ctl::new(<span class="string">"kern.ostype"</span>) {
+    <span class="macro">println!</span>(<span class="string">"Value: {:?}"</span>, ctl.value());
+}</code></pre></div>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.value_as" class="method"><a class="src rightside" href="../src/sysctl/traits.rs.html#135">Source</a><h4 class="code-header">fn <a href="#tymethod.value_as" class="fn">value_as</a>&lt;T&gt;(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.87.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;T&gt;, <a class="enum" href="enum.SysctlError.html" title="enum sysctl::SysctlError">SysctlError</a>&gt;</h4></section></summary><div class="docblock"><p>A generic method that takes returns a result containing the sysctl
+value if success, or a SysctlError on failure.</p>
+<p>May only be called for sysctls of type Opaque or Struct.</p>
+<h5 id="example-6"><a class="doc-anchor" href="#example-6">§</a>Example</h5>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="attr">#[derive(Debug)]
+#[repr(C)]
+</span><span class="kw">struct </span>ClockInfo {
+    hz: libc::c_int, <span class="comment">/* clock frequency */
+    </span>tick: libc::c_int, <span class="comment">/* micro-seconds per hz tick */
+    </span>spare: libc::c_int,
+    stathz: libc::c_int, <span class="comment">/* statistics clock frequency */
+    </span>profhz: libc::c_int, <span class="comment">/* profiling clock frequency */
+</span>}
+
+<span class="kw">if let </span><span class="prelude-val">Ok</span>(ctl) = sysctl::Ctl::new(<span class="string">"kern.clockrate"</span>) {
+    <span class="macro">println!</span>(<span class="string">"{:?}"</span>, ctl.value_as::&lt;ClockInfo&gt;());
+}</code></pre></div>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.value_string" class="method"><a class="src rightside" href="../src/sysctl/traits.rs.html#147">Source</a><h4 class="code-header">fn <a href="#tymethod.value_string" class="fn">value_string</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.87.0/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>, <a class="enum" href="enum.SysctlError.html" title="enum sysctl::SysctlError">SysctlError</a>&gt;</h4></section></summary><div class="docblock"><p>Returns a result containing the sysctl value as String on
+success, or a SysctlError on failure.</p>
+<h5 id="example-7"><a class="doc-anchor" href="#example-7">§</a>Example</h5>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">if let </span><span class="prelude-val">Ok</span>(ctl) = sysctl::Ctl::new(<span class="string">"kern.osrevision"</span>) {
+    <span class="macro">println!</span>(<span class="string">"Value: {:?}"</span>, ctl.value_string());
+}</code></pre></div>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.set_value" class="method"><a class="src rightside" href="../src/sysctl/traits.rs.html#167">Source</a><h4 class="code-header">fn <a href="#tymethod.set_value" class="fn">set_value</a>(&amp;self, value: <a class="enum" href="enum.CtlValue.html" title="enum sysctl::CtlValue">CtlValue</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="enum" href="enum.CtlValue.html" title="enum sysctl::CtlValue">CtlValue</a>, <a class="enum" href="enum.SysctlError.html" title="enum sysctl::SysctlError">SysctlError</a>&gt;</h4></section></summary><div class="docblock"><p>Sets the value of a sysctl.
+Fetches and returns the new value if successful, or returns a
+SysctlError on failure.</p>
+<h5 id="example-8"><a class="doc-anchor" href="#example-8">§</a>Example</h5>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>sysctl::Sysctl;
+
+<span class="kw">fn </span>main() {
+    <span class="kw">if unsafe </span>{ libc::getuid() } == <span class="number">0 </span>{
+        <span class="kw">if let </span><span class="prelude-val">Ok</span>(ctl) = sysctl::Ctl::new(<span class="string">"hw.usb.debug"</span>) {
+            <span class="kw">let </span>org = ctl.value().unwrap();
+            <span class="kw">let </span>set = ctl.set_value(sysctl::CtlValue::Int(<span class="number">1</span>)).unwrap();
+            <span class="macro">assert_eq!</span>(set, sysctl::CtlValue::Int(<span class="number">1</span>));
+            ctl.set_value(org).unwrap();
+        }
+    }
+}</code></pre></div>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.set_value_string" class="method"><a class="src rightside" href="../src/sysctl/traits.rs.html#187">Source</a><h4 class="code-header">fn <a href="#tymethod.set_value_string" class="fn">set_value_string</a>(&amp;self, value: &amp;<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.str.html">str</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.87.0/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>, <a class="enum" href="enum.SysctlError.html" title="enum sysctl::SysctlError">SysctlError</a>&gt;</h4></section></summary><div class="docblock"><p>Sets the value of a sysctl with input as string.
+Fetches and returns the new value if successful, or returns a
+SysctlError on failure.</p>
+<h5 id="example-9"><a class="doc-anchor" href="#example-9">§</a>Example</h5>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>sysctl::Sysctl;
+
+<span class="kw">fn </span>main() {
+    <span class="kw">if unsafe </span>{ libc::getuid() } == <span class="number">0 </span>{
+        <span class="kw">if let </span><span class="prelude-val">Ok</span>(ctl) = sysctl::Ctl::new(<span class="string">"hw.usb.debug"</span>) {
+            <span class="kw">let </span>org = ctl.value_string().unwrap();
+            <span class="kw">let </span>set = ctl.set_value_string(<span class="string">"1"</span>);
+            <span class="macro">println!</span>(<span class="string">"hw.usb.debug: -&gt; {:?}"</span>, set);
+            ctl.set_value_string(<span class="kw-2">&amp;</span>org).unwrap();
+        }
+    }
+}</code></pre></div>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.flags" class="method"><a class="src rightside" href="../src/sysctl/traits.rs.html#202">Source</a><h4 class="code-header">fn <a href="#tymethod.flags" class="fn">flags</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="struct.CtlFlags.html" title="struct sysctl::CtlFlags">CtlFlags</a>, <a class="enum" href="enum.SysctlError.html" title="enum sysctl::SysctlError">SysctlError</a>&gt;</h4></section></summary><div class="docblock"><p>Get the flags for a sysctl.</p>
+<p>Returns a Result containing the flags on success,
+or a SysctlError on failure.</p>
+<h5 id="example-10"><a class="doc-anchor" href="#example-10">§</a>Example</h5>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">if let </span><span class="prelude-val">Ok</span>(ctl) = sysctl::Ctl::new(<span class="string">"kern.ostype"</span>) {
+    <span class="kw">let </span>readable = ctl.flags().unwrap().contains(sysctl::CtlFlags::RD);
+    <span class="macro">assert!</span>(readable);
+}</code></pre></div>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.info" class="method"><a class="src rightside" href="../src/sysctl/traits.rs.html#223">Source</a><h4 class="code-header">fn <a href="#tymethod.info" class="fn">info</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="struct.CtlInfo.html" title="struct sysctl::CtlInfo">CtlInfo</a>, <a class="enum" href="enum.SysctlError.html" title="enum sysctl::SysctlError">SysctlError</a>&gt;</h4></section></summary><div class="docblock"><p>Returns a Result containing the control metadata for a sysctl.</p>
+<p>Returns a Result containing the CtlInfo struct on success,
+or a SysctlError on failure.</p>
+<h5 id="example-11"><a class="doc-anchor" href="#example-11">§</a>Example</h5>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>sysctl::Sysctl;
+
+<span class="kw">fn </span>main() {
+    <span class="kw">if let </span><span class="prelude-val">Ok</span>(ctl) = sysctl::Ctl::new(<span class="string">"kern.osrevision"</span>) {
+        <span class="kw">let </span>info = ctl.info().unwrap();
+
+        <span class="comment">// kern.osrevision is not a structure.
+        </span><span class="macro">assert_eq!</span>(info.struct_type(), <span class="prelude-val">None</span>);
+    }
+}</code></pre></div>
+</div></details></div><h2 id="dyn-compatibility" class="section-header">Dyn Compatibility<a href="#dyn-compatibility" class="anchor">§</a></h2><div class="dyn-compatibility-info"><p>This trait is <b>not</b> <a href="https://doc.rust-lang.org/1.87.0/reference/items/traits.html#dyn-compatibility">dyn compatible</a>.</p><p><i>In older versions of Rust, dyn compatibility was called "object safety", so this trait is not object safe.</i></p></div><h2 id="implementors" class="section-header">Implementors<a href="#implementors" class="anchor">§</a></h2><div id="implementors-list"><section id="impl-Sysctl-for-Ctl" class="impl"><a class="src rightside" href="../src/sysctl/unix/ctl.rs.html#39-283">Source</a><a href="#impl-Sysctl-for-Ctl" class="anchor">§</a><h3 class="code-header">impl <a class="trait" href="trait.Sysctl.html" title="trait sysctl::Sysctl">Sysctl</a> for <a class="enum" href="enum.Ctl.html" title="enum sysctl::Ctl">Ctl</a></h3></section></div><script src="../trait.impl/sysctl/traits/trait.Sysctl.js" async></script></section></div></main></body></html>

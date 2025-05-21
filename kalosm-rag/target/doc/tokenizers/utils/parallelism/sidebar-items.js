@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["ENV_VARIABLE"],"fn":["current_num_threads","get_parallelism","has_parallelism_been_used","is_parallelism_configured","set_parallelism"],"trait":["MaybeParallelBridge","MaybeParallelIterator","MaybeParallelRefIterator","MaybeParallelRefMutIterator","MaybeParallelSlice"]};

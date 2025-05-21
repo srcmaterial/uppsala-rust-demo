@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["attr","clean_attr","extract_text","find_node","get_attr","get_tag_name","has_link","has_nodes","is_empty","set_attr","text_children_count","text_len"]};

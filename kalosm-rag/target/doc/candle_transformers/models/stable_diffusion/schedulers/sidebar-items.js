@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["BetaSchedule","PredictionType","TimestepSpacing"],"trait":["Scheduler","SchedulerConfig"]};

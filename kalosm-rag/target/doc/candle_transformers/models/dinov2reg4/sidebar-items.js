@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["vit_base","vit_small"],"struct":["DinoVisionTransformer"]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["Config","Embeddings","Encoder","Model"]};

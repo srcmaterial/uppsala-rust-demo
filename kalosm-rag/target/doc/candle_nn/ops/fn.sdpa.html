@@ -1,0 +1,40 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Scaled dot product attention with a fused kernel."><title>sdpa in candle_nn::ops - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../static.files/rustdoc-916cea96.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="candle_nn" data-themes="" data-resource-suffix="" data-rustdoc-version="1.87.0 (17067e9ac 2025-05-09)" data-channel="1.87.0" data-search-js="search-e7298875.js" data-settings-js="settings-d72f25bb.js" ><script src="../../static.files/storage-82c7156e.js"></script><script defer src="sidebar-items.js"></script><script defer src="../../static.files/main-fb8c74a8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-044be391.svg"></head><body class="rustdoc fn"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../../candle_nn/index.html">candle_<wbr>nn</a><span class="version">0.8.4</span></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">sdpa</a></h2><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#on-metal" title="On Metal:">On Metal:</a></li></ul></section><div id="rustdoc-modnav"><h2><a href="index.html">In candle_<wbr>nn::<wbr>ops</a></h2></div></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><div class="rustdoc-breadcrumbs"><a href="../index.html">candle_nn</a>::<wbr><a href="index.html">ops</a></div><h1>Function <span class="fn">sdpa</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../../src/candle_nn/ops.rs.html#1210-1212">Source</a> </span></div><pre class="rust item-decl"><code>pub fn sdpa(
+    q: &amp;<a class="struct" href="../../candle_core/tensor/struct.Tensor.html" title="struct candle_core::tensor::Tensor">Tensor</a>,
+    k: &amp;<a class="struct" href="../../candle_core/tensor/struct.Tensor.html" title="struct candle_core::tensor::Tensor">Tensor</a>,
+    v: &amp;<a class="struct" href="../../candle_core/tensor/struct.Tensor.html" title="struct candle_core::tensor::Tensor">Tensor</a>,
+    scale: <a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.f32.html">f32</a>,
+    softcapping: <a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.f32.html">f32</a>,
+) -&gt; <a class="type" href="../../candle_core/error/type.Result.html" title="type candle_core::error::Result">Result</a>&lt;<a class="struct" href="../../candle_core/tensor/struct.Tensor.html" title="struct candle_core::tensor::Tensor">Tensor</a>&gt;</code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Scaled dot product attention with a fused kernel.</p>
+<p>Computes softmax(qk^T*scale)v.</p>
+<p><strong>Inputs shapes:</strong></p>
+<ul>
+<li><code>q</code>: (bs, qhead, seq, hidden)</li>
+<li><code>k</code>: (bs, kv_head, kv_seq, hidden)</li>
+<li><code>k</code>: (bs, kv_head, kv_seq, v_hidden)</li>
+<li><code>scale</code> is applied before softmax.</li>
+<li>If <code>softcapping</code> != 1.0:
+<ul>
+<li>Computation is: softmax(tanh(qk^T*scale/cap)*cap)v</li>
+</ul>
+</li>
+</ul>
+<p><strong>Output shape:</strong> (bs, qhead, seq, v_hidden)</p>
+<p><strong>Supported head dims:</strong> 32, 64, 96, 128, 256.</p>
+<h3 id="on-metal"><a class="doc-anchor" href="#on-metal">§</a>On Metal:</h3>
+<ul>
+<li>If <code>seq</code> == 1:
+<ul>
+<li>Use a vectorized kernel</li>
+<li>Supports <code>seq</code> != <code>kv_seq</code> (cross attn. support)</li>
+<li>Supports GQA when <code>qhead</code> is a multiple of <code>kv_head</code></li>
+</ul>
+</li>
+<li>Otherwise:
+<ul>
+<li>Use an alternate kernel</li>
+<li>Requires <code>seq</code> == <code>kv_seq</code></li>
+<li>GQA is not supported (requires <code>qhead</code> == <code>kv_head</code>)</li>
+</ul>
+</li>
+</ul>
+</div></details></section></div></main></body></html>

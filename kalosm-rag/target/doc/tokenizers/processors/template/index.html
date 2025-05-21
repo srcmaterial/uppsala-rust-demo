@@ -1,0 +1,54 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Template Processing"><title>tokenizers::processors::template - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-916cea96.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="tokenizers" data-themes="" data-resource-suffix="" data-rustdoc-version="1.87.0 (17067e9ac 2025-05-09)" data-channel="1.87.0" data-search-js="search-e7298875.js" data-settings-js="settings-d72f25bb.js" ><script src="../../../static.files/storage-82c7156e.js"></script><script defer src="../sidebar-items.js"></script><script defer src="../../../static.files/main-fb8c74a8.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-893ab5e7.css"></noscript><link rel="icon" href="https://huggingface.co/favicon.ico"></head><body class="rustdoc mod"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button><a class="logo-container" href="../../../tokenizers/index.html"><img src="https://huggingface.co/landing/assets/huggingface_logo.svg" alt=""></a></nav><nav class="sidebar"><div class="sidebar-crate"><a class="logo-container" href="../../../tokenizers/index.html"><img src="https://huggingface.co/landing/assets/huggingface_logo.svg" alt="logo"></a><h2><a href="../../../tokenizers/index.html">tokenizers</a><span class="version">0.21.1</span></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">Module template</a></h2><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#template-processing" title="Template Processing">Template Processing</a><ul><li><a href="#example" title="Example">Example</a></li></ul></li></ul><h3><a href="#structs">Module Items</a></h3><ul class="block"><li><a href="#structs" title="Structs">Structs</a></li><li><a href="#enums" title="Enums">Enums</a></li></ul></section><div id="rustdoc-modnav"><h2><a href="../index.html">In tokenizers::<wbr>processors</a></h2></div></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><div class="rustdoc-breadcrumbs"><a href="../../index.html">tokenizers</a>::<wbr><a href="../index.html">processors</a></div><h1>Module <span>template</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../../../src/tokenizers/processors/template.rs.html#1-1104">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><h2 id="template-processing"><a class="doc-anchor" href="#template-processing">§</a>Template Processing</h2>
+<p>Provides a way to specify templates in order to add the special tokens to each
+input sequence as relevant.</p>
+<h3 id="example"><a class="doc-anchor" href="#example">§</a>Example</h3>
+<p>Let’s take <code>BERT</code> tokenizer as an example. It uses two special tokens, used to
+delimitate each sequence. <code>[CLS]</code> is always used at the beginning of the first
+sequence, and <code>[SEP]</code> is added at the end of both the first, and the pair
+sequences. The final result looks like this:</p>
+<ul>
+<li>Single sequence: <code>[CLS] Hello there [SEP]</code></li>
+<li>Pair sequences: <code>[CLS] My name is Anthony [SEP] What is my name? [SEP]</code></li>
+</ul>
+<p>With the type ids as following:</p>
+<div class="example-wrap"><pre class="language-markdown"><code>[CLS]   ...   [SEP]   ...   [SEP]
+  0      0      0      1      1</code></pre></div>
+<p>So, we can define a <a href="struct.TemplateProcessing.html"><code>TemplateProcessing</code></a> that will achieve this result:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span>template = TemplateProcessing::builder()
+    <span class="comment">// The template when we only have a single sequence:
+    </span>.try_single(<span class="macro">vec!</span>[<span class="string">"[CLS]"</span>, <span class="string">"$0"</span>, <span class="string">"[SEP]"</span>]).unwrap()
+    <span class="comment">// Same as:
+    </span>.try_single(<span class="string">"[CLS] $0 [SEP]"</span>).unwrap()
+
+    <span class="comment">// The template when we have both sequences:
+    </span>.try_pair(<span class="macro">vec!</span>[<span class="string">"[CLS]:0"</span>, <span class="string">"$A:0"</span>, <span class="string">"[SEP]:0"</span>, <span class="string">"$B:1"</span>, <span class="string">"[SEP]:1"</span>]).unwrap()
+    <span class="comment">// Same as:
+    </span>.try_pair(<span class="string">"[CLS]:0 $A:0 [SEP]:0 $B:1 [SEP]:1"</span>).unwrap()
+    <span class="comment">// Or:
+    </span>.try_pair(<span class="string">"[CLS] $0 [SEP] $B:1 [SEP]:1"</span>).unwrap()
+
+    <span class="comment">// The list of special tokens used by each sequences
+    </span>.special_tokens(<span class="macro">vec!</span>[(<span class="string">"[CLS]"</span>, <span class="number">1</span>), (<span class="string">"[SEP]"</span>, <span class="number">0</span>)])
+    .build()
+    .unwrap();</code></pre></div>
+<p>In this example, each input sequence is identified using a <code>$</code> construct. This identifier
+lets us specify each input sequence, and the type_id to use. When nothing is specified,
+it uses the default values. Here are the different ways to specify it:</p>
+<ul>
+<li>Specifying the sequence, with default <code>type_id == 0</code>: <code>$A</code> or <code>$B</code></li>
+<li>Specifying the <code>type_id</code> with default <code>sequence == A</code>: <code>$0</code>, <code>$1</code>, <code>$2</code>, …</li>
+<li>Specifying both: <code>$A:0</code>, <code>$B:1</code>, …</li>
+</ul>
+<p>The same construct is used for special tokens: <code>&lt;identifier&gt;(:&lt;type_id&gt;)?</code>.</p>
+<p><strong>Warning</strong>: You must ensure that you are giving the correct tokens/ids as these will
+be added to the <code>Encoding</code> without any further check. If the given ids correspond to
+something totally different in a <code>Tokenizer</code> using this <code>PostProcessor</code>, it might lead
+to unexpected results.</p>
+</div></details><h2 id="structs" class="section-header">Structs<a href="#structs" class="anchor">§</a></h2><dl class="item-table"><dt><a class="struct" href="struct.SpecialToken.html" title="struct tokenizers::processors::template::SpecialToken">Special<wbr>Token</a></dt><dd>Represents a bunch of tokens to be used in a template.
+Usually, special tokens have only one associated id/token but in
+some cases, it might be interesting to have multiple ids/tokens.</dd><dt><a class="struct" href="struct.Template.html" title="struct tokenizers::processors::template::Template">Template</a></dt><dd>A Template represents a Vec&lt;<a href="enum.Piece.html"><code>Piece</code></a>&gt;.</dd><dt><a class="struct" href="struct.TemplateProcessing.html" title="struct tokenizers::processors::template::TemplateProcessing">Template<wbr>Processing</a></dt><dd>This PostProcessor takes care of processing each input <code>Encoding</code> by applying
+the corresponding template, before merging them in the final Encoding.</dd><dt><a class="struct" href="struct.TemplateProcessingBuilder.html" title="struct tokenizers::processors::template::TemplateProcessingBuilder">Template<wbr>Processing<wbr>Builder</a></dt><dd>Builder for <a href="struct.TemplateProcessing.html"><code>TemplateProcessing</code></a>.</dd><dt><a class="struct" href="struct.Tokens.html" title="struct tokenizers::processors::template::Tokens">Tokens</a></dt><dd>A bunch of <a href="struct.SpecialToken.html"><code>SpecialToken</code></a> represented by their ID.
+Internally, <code>Tokens</code> is a <code>HashMap&lt;String, SpecialToken&gt;</code> and can be built
+from a HashMap or a Vec&lt;<a href="struct.SpecialToken.html"><code>SpecialToken</code></a>&gt;.</dd></dl><h2 id="enums" class="section-header">Enums<a href="#enums" class="anchor">§</a></h2><dl class="item-table"><dt><a class="enum" href="enum.Piece.html" title="enum tokenizers::processors::template::Piece">Piece</a></dt><dd>Represents the different kind of pieces that constitute a template.
+It can be either the input sequence or a <a href="struct.SpecialToken.html"><code>SpecialToken</code></a>:</dd><dt><a class="enum" href="enum.Sequence.html" title="enum tokenizers::processors::template::Sequence">Sequence</a></dt><dd>Represents any sequences received as input of the PostProcessor</dd><dt><a class="enum" href="enum.TemplateProcessingBuilderError.html" title="enum tokenizers::processors::template::TemplateProcessingBuilderError">Template<wbr>Processing<wbr>Builder<wbr>Error</a></dt><dd>Error type for TemplateProcessingBuilder</dd></dl></section></div></main></body></html>

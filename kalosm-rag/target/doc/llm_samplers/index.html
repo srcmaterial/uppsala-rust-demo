@@ -1,0 +1,117 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="LLM Samplers"><title>llm_samplers - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-916cea96.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="llm_samplers" data-themes="" data-resource-suffix="" data-rustdoc-version="1.87.0 (17067e9ac 2025-05-09)" data-channel="1.87.0" data-search-js="search-e7298875.js" data-settings-js="settings-d72f25bb.js" ><script src="../static.files/storage-82c7156e.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-fb8c74a8.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../llm_samplers/index.html">llm_<wbr>samplers</a><span class="version">0.0.7</span></h2></div><div class="sidebar-elems"><ul class="block"><li><a id="all-types" href="all.html">All Items</a></li></ul><section id="rustdoc-toc"><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#llm-samplers" title="LLM Samplers">LLM Samplers</a><ul><li><a href="#examples" title="Examples">Examples</a></li><li><a href="#suggested-chainsordering" title="Suggested chains/ordering">Suggested chains/ordering</a></li></ul></li></ul><h3><a href="#modules">Crate Items</a></h3><ul class="block"><li><a href="#modules" title="Modules">Modules</a></li></ul></section><div id="rustdoc-modnav"></div></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1>Crate <span>llm_samplers</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/llm_samplers/lib.rs.html#1-156">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><h2 id="llm-samplers"><a class="doc-anchor" href="#llm-samplers">§</a>LLM Samplers</h2>
+<p>Rusty samplers for large language models.</p>
+<h3 id="examples"><a class="doc-anchor" href="#examples">§</a>Examples</h3>
+<p>You probably won’t usually want to use individual <a href="types/trait.Sampler.html" title="trait llm_samplers::types::Sampler">crate::types::Sampler</a>s. The most typical
+use case is going to be chaining a number of samplers together. For reference, here’s a link to
+the <a href="samplers/index.html" title="mod llm_samplers::samplers">crate::samplers</a> module.</p>
+<p>A simple example of constructing a <a href="types/struct.SamplerChain.html" title="struct llm_samplers::types::SamplerChain">crate::prelude::SamplerChain</a>:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>anyhow::Result;
+
+<span class="kw">use </span>llm_samplers::prelude::<span class="kw-2">*</span>;
+
+<span class="kw">pub fn </span>test_chain1() -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+
+    <span class="kw">let </span><span class="kw-2">mut </span>logits = Logits::try_from_iter([<span class="number">0.1f32</span>, <span class="number">0.2</span>, <span class="number">0.3</span>, <span class="number">0.4</span>].into_iter())<span class="question-mark">?</span>;
+
+    <span class="comment">// Demonstrating the different ways you can build a SamplerChain.
+    // These are all equivalent.
+    </span><span class="kw">let </span><span class="kw-2">mut </span>sc = SamplerChain::new()
+        + SampleFlatBias::new([(<span class="number">3</span>, f32::NEG_INFINITY)]);
+    sc += SampleTemperature::new(<span class="number">0.8</span>);
+    sc.push_sampler(SampleGreedy::new());
+
+    <span class="macro">assert_eq!</span>(
+        sc.sample_token(
+            <span class="comment">// These samplers don't actually need any resources.
+            </span><span class="kw-2">&amp;mut </span>NilSamplerResources::default(),
+            <span class="kw-2">&amp;mut </span>logits)<span class="question-mark">?</span>,
+        <span class="prelude-val">Some</span>(<span class="number">1</span>)
+    );
+
+    <span class="comment">// () also implements HasSamplerResources&lt;TokenId = u32&gt;
+    // so you could use &amp;mut () here.
+    </span><span class="macro">assert_eq!</span>(sc.sample_token(<span class="kw-2">&amp;mut </span>(), <span class="kw-2">&amp;mut </span>logits)<span class="question-mark">?</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>));
+    <span class="prelude-val">Ok</span>(())
+}</code></pre></div>
+<p>Now let’s look at something a bit more complicated:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>std::sync::{Arc, RwLock};
+
+<span class="kw">use </span>anyhow::Result;
+<span class="kw">use </span>rand::{SeedableRng, rngs::StdRng};
+
+<span class="kw">use </span>llm_samplers::prelude::<span class="kw-2">*</span>;
+
+<span class="kw">fn </span>test_chain2() -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">let </span>example_logits = <span class="macro">vec!</span>[<span class="number">0.1f32</span>, <span class="number">0.2</span>, <span class="number">0.3</span>, <span class="number">0.4</span>];
+    <span class="kw">let </span><span class="kw-2">mut </span>res = SimpleSamplerResources::new(
+        <span class="comment">// Optionally include an RNG resource.
+        </span><span class="prelude-val">Some</span>(Box::new(StdRng::seed_from_u64(<span class="number">123</span>))),
+        <span class="comment">// Optionally include a last tokens resource.
+        </span><span class="prelude-val">Some</span>(<span class="macro">vec!</span>[]),
+    );
+    <span class="kw">let </span><span class="kw-2">mut </span>logits = Logits::try_from_iter(example_logits.into_iter())<span class="question-mark">?</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>logits2 = logits.clone();
+
+    <span class="comment">// SamplerChain with u32 token id type and f32 logit type.
+    </span><span class="kw">let </span><span class="kw-2">mut </span>sc = SamplerChain::new()
+        <span class="comment">// Bias logits (this example sets bias for token id 3 to -inf)
+        </span>+ SampleFlatBias::new([(<span class="number">3</span>, f32::NEG_INFINITY)])
+        <span class="comment">// Apply a repetition penalty.
+        </span>+ SampleRepetition::new(<span class="number">1.1</span>, <span class="number">64</span>)
+        <span class="comment">// Apply frequency and presence penalties.
+        </span>+ SampleFreqPresence::new(<span class="number">0.05</span>, <span class="number">0.1</span>, <span class="number">64</span>)
+        <span class="comment">// Apply temperature to logits.
+        </span>+ SampleTemperature::new(<span class="number">0.8</span>)
+        <span class="comment">// Sample a token using Mirostat1
+        </span>+ SampleMirostat1::new(<span class="number">4</span>, <span class="number">5.0</span>, <span class="number">0.1</span>);
+
+    <span class="comment">// Put a value into `last_tokens`, this simulates us having already picked
+    // that token (3) previously.
+    </span>res.with_last_tokens_mut(<span class="kw-2">&amp;mut </span>|tokens| tokens.push(<span class="number">3u32</span>))<span class="question-mark">?</span>;
+
+    <span class="macro">assert_eq!</span>(sc.sample_token(<span class="kw-2">&amp;mut </span>res, <span class="kw-2">&amp;mut </span>logits)<span class="question-mark">?</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>));
+
+    <span class="comment">// Now add the last selected token to the list.
+    </span>res.with_last_tokens_mut(<span class="kw-2">&amp;mut </span>|tokens| tokens.push(<span class="number">2u32</span>))<span class="question-mark">?</span>;
+
+    <span class="comment">// And pick the next one. *Important*: Note that we don't reuse `logits`.
+    // This is because `logits` already has all the filtering/sorting/permutation
+    // from the previous sample call applied to it.
+    </span><span class="macro">assert_eq!</span>(sc.sample_token(<span class="kw-2">&amp;mut </span>res, <span class="kw-2">&amp;mut </span>logits2)<span class="question-mark">?</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>));
+    <span class="prelude-val">Ok</span>(())
+}
+</code></pre></div>
+<h3 id="suggested-chainsordering"><a class="doc-anchor" href="#suggested-chainsordering">§</a>Suggested chains/ordering</h3>
+<p>Suggestions based on the way <code>llama.cpp</code> does it.</p>
+<p>Note that you may not get meaningful results if you do weird stuff like chaining
+multiple token selecting samplers. Based on available information, it also seems
+like combining Mirostat samplers with top-K, top-P, etc will not work.</p>
+<h4 id="temperature-sampling"><a class="doc-anchor" href="#temperature-sampling">§</a>Temperature sampling</h4>
+<ol>
+<li><a href="samplers/struct.SampleFlatBias.html" title="struct llm_samplers::samplers::SampleFlatBias">SampleFlatBias</a> (optional)</li>
+<li><a href="samplers/struct.SampleRepetition.html" title="struct llm_samplers::samplers::SampleRepetition">SampleRepetition</a> (optional)</li>
+<li><a href="samplers/struct.SampleFreqPresence.html" title="struct llm_samplers::samplers::SampleFreqPresence">SampleFreqPresence</a> (optional)</li>
+<li><a href="samplers/struct.SampleTopK.html" title="struct llm_samplers::samplers::SampleTopK">SampleTopK</a> (optional)</li>
+<li><a href="samplers/struct.SampleTailFree.html" title="struct llm_samplers::samplers::SampleTailFree">SampleTailFree</a> (optional)</li>
+<li><a href="samplers/struct.SampleLocallyTypical.html" title="struct llm_samplers::samplers::SampleLocallyTypical">SampleLocallyTypical</a> (optional)</li>
+<li><a href="samplers/struct.SampleTopP.html" title="struct llm_samplers::samplers::SampleTopP">SampleTopP</a> (optional)</li>
+<li><a href="samplers/struct.SampleMinP.html" title="struct llm_samplers::samplers::SampleMinP">SampleMinP</a> (optional)</li>
+<li><a href="samplers/struct.SampleTemperature.html" title="struct llm_samplers::samplers::SampleTemperature">SampleTemperature</a> (optional)</li>
+<li><a href="samplers/struct.SampleRandDistrib.html" title="struct llm_samplers::samplers::SampleRandDistrib">SampleRandDistrib</a></li>
+</ol>
+<h4 id="mirostat-v1v2"><a class="doc-anchor" href="#mirostat-v1v2">§</a>Mirostat V1/V2</h4>
+<ol>
+<li><a href="samplers/struct.SampleFlatBias.html" title="struct llm_samplers::samplers::SampleFlatBias">SampleFlatBias</a> (optional)</li>
+<li><a href="samplers/struct.SampleRepetition.html" title="struct llm_samplers::samplers::SampleRepetition">SampleRepetition</a> (optional)</li>
+<li><a href="samplers/struct.SampleFreqPresence.html" title="struct llm_samplers::samplers::SampleFreqPresence">SampleFreqPresence</a> (optional)</li>
+<li><a href="samplers/struct.SampleTemperature.html" title="struct llm_samplers::samplers::SampleTemperature">SampleTemperature</a> (optional)</li>
+<li><a href="samplers/struct.SampleMirostat1.html" title="struct llm_samplers::samplers::SampleMirostat1">SampleMirostat1</a> <strong>or</strong> <a href="samplers/struct.SampleMirostat2.html" title="struct llm_samplers::samplers::SampleMirostat2">SampleMirostat2</a></li>
+</ol>
+</div></details><h2 id="modules" class="section-header">Modules<a href="#modules" class="anchor">§</a></h2><dl class="item-table"><dt><a class="mod" href="configure/index.html" title="mod llm_samplers::configure">configure</a></dt><dd>Configuring sampler options
+This module implements configurable samplers
+based on keys and values and also parsing strings
+to configure a sampler.</dd><dt><a class="mod" href="prelude/index.html" title="mod llm_samplers::prelude">prelude</a></dt><dd>Convenient rexports. The simplest way to use the crate is to just throw a
+<code>use llm_samplers::prelude::*;</code>
+into your project.</dd><dt><a class="mod" href="samplers/index.html" title="mod llm_samplers::samplers">samplers</a></dt><dd>Samplers live here!</dd><dt><a class="mod" href="types/index.html" title="mod llm_samplers::types">types</a></dt><dd>Types and traits.</dd></dl></section></div></main></body></html>

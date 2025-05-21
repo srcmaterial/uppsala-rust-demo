@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["CacheError","LlamaSourceError"],"fn":["accelerated_device_if_available","copy_tensor_into_vec","maybe_autoreleasepool"],"mod":["prelude"],"struct":["AttentionMask","Cache","KvCache","Llama","LlamaBuilder","LlamaCache","LlamaChatSession","LlamaSession","LlamaSource","MaskCache","TensorCache"]};

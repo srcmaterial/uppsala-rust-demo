@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["add_f16_fp16","f16_to_f32_fp16","f16x4_to_f32x4_fp16","f32_to_f16_fp16","f32x4_to_f16x4_fp16","fmaq_f16","multiply_f16_fp16","neon_fma","neon_fmaf","vaddq_f16","vfmaq_f16","vfmaq_laneq_f16","vmulq_f16"],"struct":["Neon","NeonFcma","NeonFp16"]};

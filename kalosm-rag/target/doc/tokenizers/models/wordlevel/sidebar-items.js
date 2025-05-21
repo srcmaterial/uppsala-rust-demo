@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["Error","WordLevelTrainerBuilderError"],"struct":["WordLevel","WordLevelBuilder","WordLevelTrainer","WordLevelTrainerBuilder"]};

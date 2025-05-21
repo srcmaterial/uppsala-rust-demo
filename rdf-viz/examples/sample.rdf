@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:ex="http://example.org/">
+
+  <rdf:Description rdf:about="http://example.org/book/book1">
+    <dc:title>The Lord of the Rings</dc:title>
+    <dc:creator>J.R.R. Tolkien</dc:creator>
+    <ex:publishedBy rdf:resource="http://example.org/publisher/HarperCollins"/>
+    <ex:genre>Fantasy</ex:genre>
+    <ex:characters rdf:resource="http://example.org/character/Frodo"/>
+    <ex:characters rdf:resource="http://example.org/character/Gandalf"/>
+    <ex:characters rdf:resource="http://example.org/character/Aragorn"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://example.org/publisher/HarperCollins">
+    <dc:title>HarperCollins Publishers</dc:title>
+    <ex:location>New York</ex:location>
+    <ex:founded>1989</ex:founded>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://example.org/character/Frodo">
+    <dc:title>Frodo Baggins</dc:title>
+    <ex:race>Hobbit</ex:race>
+    <ex:friendOf rdf:resource="http://example.org/character/Gandalf"/>
+    <ex:friendOf rdf:resource="http://example.org/character/Aragorn"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://example.org/character/Gandalf">
+    <dc:title>Gandalf the Grey</dc:title>
+    <ex:race>Wizard</ex:race>
+    <ex:friendOf rdf:resource="http://example.org/character/Aragorn"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://example.org/character/Aragorn">
+    <dc:title>Aragorn</dc:title>
+    <ex:race>Human</ex:race>
+    <ex:title>King of Gondor</ex:title>
+  </rdf:Description>
+
+</rdf:RDF>

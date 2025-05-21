@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":["adapters","gpt","speaker_encoder","tokenizers","transformer"]};

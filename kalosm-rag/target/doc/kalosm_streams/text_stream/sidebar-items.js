@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["ChannelTextStream","ParagraphStream","SegmentedStream","SentenceStream","WordStream"],"trait":["Pattern","TextStream"]};

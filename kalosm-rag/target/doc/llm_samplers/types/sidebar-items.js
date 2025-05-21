@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["LogitsError","SamplerError"],"struct":["Logit","Logits","NilSamplerResources","SamplerChain","SimpleSamplerResources"],"trait":["HasSamplerResources","Sampler"],"type":["L","TID"]};

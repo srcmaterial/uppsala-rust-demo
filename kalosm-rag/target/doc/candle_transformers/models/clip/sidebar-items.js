@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["EncoderConfig"],"fn":["div_l2_norm"],"mod":["text_model","vision_model"],"struct":["ClipConfig","ClipModel"]};

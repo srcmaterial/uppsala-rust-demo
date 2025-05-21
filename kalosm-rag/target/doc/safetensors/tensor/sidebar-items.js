@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["Dtype","SafeTensorError"],"fn":["serialize","serialize_to_file"],"struct":["Metadata","SafeTensors","TensorInfo","TensorView"],"trait":["View"]};

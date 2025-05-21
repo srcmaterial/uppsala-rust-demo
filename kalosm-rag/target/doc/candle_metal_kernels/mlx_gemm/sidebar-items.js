@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["GemmDType"],"fn":["call_mlx_gemm"]};

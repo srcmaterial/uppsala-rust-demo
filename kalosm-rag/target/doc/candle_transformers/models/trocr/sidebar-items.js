@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["TrOCRConfig","TrOCRDecoder","TrOCREncoder","TrOCRForCausalLM","TrOCRModel"]};

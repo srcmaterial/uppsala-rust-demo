@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["PatchEmbedder","PositionEmbedder","TimestepEmbedder","Unpatchifier","VectorEmbedder"]};

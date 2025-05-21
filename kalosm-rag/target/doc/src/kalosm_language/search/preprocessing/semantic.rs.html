@@ -1,0 +1,237 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/Users/mariannegoldin/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/kalosm-language-0.4.1/src/search/preprocessing/semantic.rs`."><title>semantic.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-916cea96.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="kalosm_language" data-themes="" data-resource-suffix="" data-rustdoc-version="1.87.0 (17067e9ac 2025-05-09)" data-channel="1.87.0" data-search-js="search-e7298875.js" data-settings-js="settings-d72f25bb.js" ><script src="../../../../static.files/storage-82c7156e.js"></script><script defer src="../../../../static.files/src-script-63605ae7.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-fb8c74a8.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">kalosm_language/search/preprocessing/</div>semantic.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="doccomment">/// Semantic chunks try to chunk together sentences with a similar meaning.
+<a href=#2 id=2 data-nosnippet>2</a>///
+<a href=#3 id=3 data-nosnippet>3</a>/// It starts by embedding the text and then merges chunks together with a score that incentivizes:
+<a href=#4 id=4 data-nosnippet>4</a>/// - Small chunks to merge with adjacent chunks. Small chunks often have very little meaning on their own. In "I am doing very well. What about you?", the sentence "What about you?" doesn't mean much on its own, but when you mere it with the previous sentence, it makes more sense.
+<a href=#5 id=5 data-nosnippet>5</a>/// - Similar chunks to merge. If two chunks are very similar, they are more likely to be merged together.
+<a href=#6 id=6 data-nosnippet>6</a>/// - Very large chunks to stay separate. If two chunks are very large, they are more likely to be kept separate. If we just merge anything that is similar, very large chunks tend to form. We want to keep some level of different chunks, so we don't always merge similar large chunks together.
+<a href=#7 id=7 data-nosnippet>7</a>///
+<a href=#8 id=8 data-nosnippet>8</a>/// The goals here are a bit difficult to define.
+<a href=#9 id=9 data-nosnippet>9</a>/// - We want chunks that have enough context to have meaning
+<a href=#10 id=10 data-nosnippet>10</a>/// - We also want to keep those chunks as small as possible while retaining that meaning to make them cheaper to feed to the LLM
+<a href=#11 id=11 data-nosnippet>11</a>/// - Ideally the chunks have unique embeddings so it easier to find them with a query vector
+<a href=#12 id=12 data-nosnippet>12</a></span><span class="comment">//
+<a href=#13 id=13 data-nosnippet>13</a></span><span class="doccomment">///   Potential ways we could improve the quality of the chunks:
+<a href=#14 id=14 data-nosnippet>14</a>/// - Word embeddings for first level pass? The sentence embeddings this implementation uses are very slow for large documents.
+<a href=#15 id=15 data-nosnippet>15</a>/// - Estimating merges by averaging the embeddings of the two chunks? Very similar chunks tend to have an embedding after merging that is very similar to the average of the embeddings of the two chunks (cos similarity of &gt; 0.95)
+<a href=#16 id=16 data-nosnippet>16</a>/// - Find Keywords to detect what chunks refer to similar concepts? It is difficult to tell the meaning of some text that only refers to previous chunks. For example, "This further emphasizes the importance of the previous paragraph." means nothing on its own. It would be nice to know to chunk that with the previous paragraph.
+<a href=#17 id=17 data-nosnippet>17</a>/// - Try to optimize embedding chunks to be as different as possible from each other?
+<a href=#18 id=18 data-nosnippet>18</a>/// - Chunk parentheses, and quotes together? This seems fairly straightforward. Everything inside a short quote or parenthesis is likely to be similar.
+<a href=#19 id=19 data-nosnippet>19</a></span><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<a href=#20 id=20 data-nosnippet>20</a><span class="kw">use </span>kalosm_language_model::<span class="kw-2">*</span>;
+<a href=#21 id=21 data-nosnippet>21</a>
+<a href=#22 id=22 data-nosnippet>22</a><span class="attr">#[derive(Debug, Clone)]
+<a href=#23 id=23 data-nosnippet>23</a></span><span class="kw">struct </span>SemanticChunk {
+<a href=#24 id=24 data-nosnippet>24</a>    range: std::ops::Range&lt;usize&gt;,
+<a href=#25 id=25 data-nosnippet>25</a>    sentences: usize,
+<a href=#26 id=26 data-nosnippet>26</a>    embedding: Embedding,
+<a href=#27 id=27 data-nosnippet>27</a>    distance_to_next: <span class="prelude-ty">Option</span>&lt;f32&gt;,
+<a href=#28 id=28 data-nosnippet>28</a>}
+<a href=#29 id=29 data-nosnippet>29</a>
+<a href=#30 id=30 data-nosnippet>30</a><span class="doccomment">/// A chunker that tries to create chunks of wroughly the same size while grouping together chunks with a similar meaning.
+<a href=#31 id=31 data-nosnippet>31</a>///
+<a href=#32 id=32 data-nosnippet>32</a>/// It starts by embedding the text and then merges chunks together while trying to create chunks with one coherent meaning without too many sentences.
+<a href=#33 id=33 data-nosnippet>33</a></span><span class="kw">pub struct </span>SemanticChunker {
+<a href=#34 id=34 data-nosnippet>34</a>    <span class="doccomment">/// The score we are trying to achieve when merging chunks together. Once we reach this score, we stop merging chunks together.
+<a href=#35 id=35 data-nosnippet>35</a>    </span>target_score: f32,
+<a href=#36 id=36 data-nosnippet>36</a>    <span class="doccomment">/// The maximum bonus for merging small chunks together. (default: 10.0)
+<a href=#37 id=37 data-nosnippet>37</a>    </span>small_chunk_merge_bonus: f32,
+<a href=#38 id=38 data-nosnippet>38</a>    <span class="doccomment">/// The exponent for characters in the bonus for merging a small chunk with an adjacent chunk. (default: -2.0)
+<a href=#39 id=39 data-nosnippet>39</a>    </span>small_chunk_exponent: f32,
+<a href=#40 id=40 data-nosnippet>40</a>    <span class="doccomment">/// The maximum penalty for merging large chunks together. (default: 200.0)
+<a href=#41 id=41 data-nosnippet>41</a>    </span>large_chunk_penalty: f32,
+<a href=#42 id=42 data-nosnippet>42</a>    <span class="doccomment">/// The exponent for sentences in the penalty for merging a large chunk with an adjacent token. (default: 1.5)
+<a href=#43 id=43 data-nosnippet>43</a>    </span>large_chunk_exponent: f32,
+<a href=#44 id=44 data-nosnippet>44</a>}
+<a href=#45 id=45 data-nosnippet>45</a>
+<a href=#46 id=46 data-nosnippet>46</a><span class="kw">impl </span>Default <span class="kw">for </span>SemanticChunker {
+<a href=#47 id=47 data-nosnippet>47</a>    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+<a href=#48 id=48 data-nosnippet>48</a>        <span class="self">Self</span>::new()
+<a href=#49 id=49 data-nosnippet>49</a>    }
+<a href=#50 id=50 data-nosnippet>50</a>}
+<a href=#51 id=51 data-nosnippet>51</a>
+<a href=#52 id=52 data-nosnippet>52</a><span class="kw">impl </span>SemanticChunker {
+<a href=#53 id=53 data-nosnippet>53</a>    <span class="doccomment">/// Create a new [`SemanticChunker`].
+<a href=#54 id=54 data-nosnippet>54</a>    </span><span class="kw">pub const fn </span>new() -&gt; <span class="self">Self </span>{
+<a href=#55 id=55 data-nosnippet>55</a>        <span class="self">Self </span>{
+<a href=#56 id=56 data-nosnippet>56</a>            target_score: <span class="number">0.65</span>,
+<a href=#57 id=57 data-nosnippet>57</a>            small_chunk_merge_bonus: <span class="number">10.0</span>,
+<a href=#58 id=58 data-nosnippet>58</a>            small_chunk_exponent: -<span class="number">2.0</span>,
+<a href=#59 id=59 data-nosnippet>59</a>            large_chunk_penalty: <span class="number">200.0</span>,
+<a href=#60 id=60 data-nosnippet>60</a>            large_chunk_exponent: <span class="number">1.5</span>,
+<a href=#61 id=61 data-nosnippet>61</a>        }
+<a href=#62 id=62 data-nosnippet>62</a>    }
+<a href=#63 id=63 data-nosnippet>63</a>
+<a href=#64 id=64 data-nosnippet>64</a>    <span class="doccomment">/// Set the target score for the chunker. Merging chunks will stop once this is the maximum score of merging two chunks together. A higher score will result in smaller chunks because merging chunks together will stop at a higher score.
+<a href=#65 id=65 data-nosnippet>65</a>    </span><span class="kw">pub fn </span>with_target_score(<span class="kw-2">mut </span><span class="self">self</span>, target_score: f32) -&gt; <span class="self">Self </span>{
+<a href=#66 id=66 data-nosnippet>66</a>        <span class="self">self</span>.target_score = target_score;
+<a href=#67 id=67 data-nosnippet>67</a>        <span class="self">self
+<a href=#68 id=68 data-nosnippet>68</a>    </span>}
+<a href=#69 id=69 data-nosnippet>69</a>
+<a href=#70 id=70 data-nosnippet>70</a>    <span class="doccomment">/// Set the maximum bonus for merging small chunks together. (default: 10.0)
+<a href=#71 id=71 data-nosnippet>71</a>    ///
+<a href=#72 id=72 data-nosnippet>72</a>    /// The bonus for merging two small chunks together is `small_chunk_merge_bonus * (min(bytes_in_first_chunk, bytes_in_second_chunk) ^ small_chunk_exponent)`.
+<a href=#73 id=73 data-nosnippet>73</a>    </span><span class="kw">pub fn </span>with_small_chunk_merge_bonus(<span class="kw-2">mut </span><span class="self">self</span>, small_chunk_merge_bonus: f32) -&gt; <span class="self">Self </span>{
+<a href=#74 id=74 data-nosnippet>74</a>        <span class="self">self</span>.small_chunk_merge_bonus = small_chunk_merge_bonus;
+<a href=#75 id=75 data-nosnippet>75</a>        <span class="self">self
+<a href=#76 id=76 data-nosnippet>76</a>    </span>}
+<a href=#77 id=77 data-nosnippet>77</a>
+<a href=#78 id=78 data-nosnippet>78</a>    <span class="doccomment">/// Set the exponent for characters in the bonus for merging a small chunk with an adjacent chunk. (default: -2.0)
+<a href=#79 id=79 data-nosnippet>79</a>    ///
+<a href=#80 id=80 data-nosnippet>80</a>    /// The bonus for merging two small chunks together is `small_chunk_merge_bonus * (min(bytes_in_first_chunk, bytes_in_second_chunk) ^ small_chunk_exponent)`.
+<a href=#81 id=81 data-nosnippet>81</a>    </span><span class="kw">pub fn </span>with_small_chunk_exponent(<span class="kw-2">mut </span><span class="self">self</span>, small_chunk_exponent: f32) -&gt; <span class="self">Self </span>{
+<a href=#82 id=82 data-nosnippet>82</a>        <span class="self">self</span>.small_chunk_exponent = small_chunk_exponent;
+<a href=#83 id=83 data-nosnippet>83</a>        <span class="self">self
+<a href=#84 id=84 data-nosnippet>84</a>    </span>}
+<a href=#85 id=85 data-nosnippet>85</a>
+<a href=#86 id=86 data-nosnippet>86</a>    <span class="doccomment">/// Set the maximum penalty for merging large chunks together. (default: 200.0)
+<a href=#87 id=87 data-nosnippet>87</a>    ///
+<a href=#88 id=88 data-nosnippet>88</a>    /// The penalty for merging two large chunks together is `-(max(sentences_in_first_chunk, sentences_in_second_chunk) ^ large_chunk_exponent)/large_chunk_penalty`.
+<a href=#89 id=89 data-nosnippet>89</a>    </span><span class="kw">pub fn </span>with_large_chunk_penalty(<span class="kw-2">mut </span><span class="self">self</span>, large_chunk_penalty: f32) -&gt; <span class="self">Self </span>{
+<a href=#90 id=90 data-nosnippet>90</a>        <span class="self">self</span>.large_chunk_penalty = large_chunk_penalty;
+<a href=#91 id=91 data-nosnippet>91</a>        <span class="self">self
+<a href=#92 id=92 data-nosnippet>92</a>    </span>}
+<a href=#93 id=93 data-nosnippet>93</a>
+<a href=#94 id=94 data-nosnippet>94</a>    <span class="doccomment">/// Set the exponent for sentences in the penalty for merging a large chunk with an adjacent token. (default: 1.5)
+<a href=#95 id=95 data-nosnippet>95</a>    ///
+<a href=#96 id=96 data-nosnippet>96</a>    /// The penalty for merging two large chunks together is `-(max(sentences_in_first_chunk, sentences_in_second_chunk) ^ large_chunk_exponent)/large_chunk_penalty`.
+<a href=#97 id=97 data-nosnippet>97</a>    </span><span class="kw">pub fn </span>with_large_chunk_exponent(<span class="kw-2">mut </span><span class="self">self</span>, large_chunk_exponent: f32) -&gt; <span class="self">Self </span>{
+<a href=#98 id=98 data-nosnippet>98</a>        <span class="self">self</span>.large_chunk_exponent = large_chunk_exponent;
+<a href=#99 id=99 data-nosnippet>99</a>        <span class="self">self
+<a href=#100 id=100 data-nosnippet>100</a>    </span>}
+<a href=#101 id=101 data-nosnippet>101</a>
+<a href=#102 id=102 data-nosnippet>102</a>    <span class="kw">fn </span>score_merge(<span class="kw-2">&amp;</span><span class="self">self</span>, first_chunk: <span class="kw-2">&amp;</span>SemanticChunk, second_chunk: <span class="kw-2">&amp;</span>SemanticChunk) -&gt; f32 {
+<a href=#103 id=103 data-nosnippet>103</a>        <span class="comment">// Score higher if one of the chunks is very short
+<a href=#104 id=104 data-nosnippet>104</a>        </span><span class="kw">let </span>short_chunk_merge_bonus = (<span class="self">self</span>.small_chunk_merge_bonus
+<a href=#105 id=105 data-nosnippet>105</a>            / first_chunk.range.len().min(second_chunk.range.len()) <span class="kw">as </span>f32)
+<a href=#106 id=106 data-nosnippet>106</a>            .powf(<span class="self">self</span>.small_chunk_exponent);
+<a href=#107 id=107 data-nosnippet>107</a>        <span class="comment">// Score lower if the chunks are very long
+<a href=#108 id=108 data-nosnippet>108</a>        </span><span class="kw">let </span>large_chunk_penalty = (first_chunk.sentences.max(second_chunk.sentences) <span class="kw">as </span>f32)
+<a href=#109 id=109 data-nosnippet>109</a>            .powf(<span class="self">self</span>.large_chunk_exponent)
+<a href=#110 id=110 data-nosnippet>110</a>            / -<span class="self">self</span>.large_chunk_penalty;
+<a href=#111 id=111 data-nosnippet>111</a>        <span class="comment">// Score higher if the similarity is high
+<a href=#112 id=112 data-nosnippet>112</a>        </span><span class="kw">let </span>similarity = first_chunk.distance_to_next.unwrap();
+<a href=#113 id=113 data-nosnippet>113</a>        similarity + short_chunk_merge_bonus + large_chunk_penalty
+<a href=#114 id=114 data-nosnippet>114</a>    }
+<a href=#115 id=115 data-nosnippet>115</a>}
+<a href=#116 id=116 data-nosnippet>116</a>
+<a href=#117 id=117 data-nosnippet>117</a><span class="kw">impl </span>Chunker <span class="kw">for </span>SemanticChunker {
+<a href=#118 id=118 data-nosnippet>118</a>    <span class="kw">type </span>Error&lt;E: Send + Sync + <span class="lifetime">'static</span>&gt; = E;
+<a href=#119 id=119 data-nosnippet>119</a>
+<a href=#120 id=120 data-nosnippet>120</a>    <span class="kw">async fn </span>chunk&lt;E: Embedder + Send&gt;(
+<a href=#121 id=121 data-nosnippet>121</a>        <span class="kw-2">&amp;</span><span class="self">self</span>,
+<a href=#122 id=122 data-nosnippet>122</a>        document: <span class="kw-2">&amp;</span>Document,
+<a href=#123 id=123 data-nosnippet>123</a>        embedder: <span class="kw-2">&amp;</span>E,
+<a href=#124 id=124 data-nosnippet>124</a>    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;Chunk&gt;, E::Error&gt; {
+<a href=#125 id=125 data-nosnippet>125</a>        <span class="kw">let </span>text = document.body();
+<a href=#126 id=126 data-nosnippet>126</a>
+<a href=#127 id=127 data-nosnippet>127</a>        <span class="kw">let </span><span class="kw-2">mut </span>current_chunks = Vec::new();
+<a href=#128 id=128 data-nosnippet>128</a>
+<a href=#129 id=129 data-nosnippet>129</a>        <span class="comment">// First chunk by sentences
+<a href=#130 id=130 data-nosnippet>130</a>        </span><span class="kw">let </span>chunker = ChunkStrategy::Sentence {
+<a href=#131 id=131 data-nosnippet>131</a>            sentence_count: <span class="number">1</span>,
+<a href=#132 id=132 data-nosnippet>132</a>            overlap: <span class="number">0</span>,
+<a href=#133 id=133 data-nosnippet>133</a>        };
+<a href=#134 id=134 data-nosnippet>134</a>
+<a href=#135 id=135 data-nosnippet>135</a>        <span class="kw">let </span><span class="kw-2">mut </span>initial_chunks = Vec::new();
+<a href=#136 id=136 data-nosnippet>136</a>        <span class="kw">for </span>chunk <span class="kw">in </span>chunker.chunk_str(text) {
+<a href=#137 id=137 data-nosnippet>137</a>            <span class="kw">let </span>trimmed = text[chunk.clone()].trim();
+<a href=#138 id=138 data-nosnippet>138</a>            <span class="kw">if </span>!trimmed.is_empty() {
+<a href=#139 id=139 data-nosnippet>139</a>                current_chunks.push(chunk);
+<a href=#140 id=140 data-nosnippet>140</a>                initial_chunks.push(trimmed.to_string());
+<a href=#141 id=141 data-nosnippet>141</a>            }
+<a href=#142 id=142 data-nosnippet>142</a>        }
+<a href=#143 id=143 data-nosnippet>143</a>
+<a href=#144 id=144 data-nosnippet>144</a>        <span class="kw">let </span>embeddings = embedder.embed_vec(initial_chunks).<span class="kw">await</span><span class="question-mark">?</span>;
+<a href=#145 id=145 data-nosnippet>145</a>
+<a href=#146 id=146 data-nosnippet>146</a>        <span class="kw">let </span><span class="kw-2">mut </span>chunks = Vec::new();
+<a href=#147 id=147 data-nosnippet>147</a>
+<a href=#148 id=148 data-nosnippet>148</a>        <span class="comment">// Find the chain of distances between sequential embeddings
+<a href=#149 id=149 data-nosnippet>149</a>        </span><span class="kw">for </span>(i, chunk) <span class="kw">in </span>current_chunks.iter().enumerate() {
+<a href=#150 id=150 data-nosnippet>150</a>            <span class="kw">if </span>i == current_chunks.len() - <span class="number">1 </span>{
+<a href=#151 id=151 data-nosnippet>151</a>                chunks.push(SemanticChunk {
+<a href=#152 id=152 data-nosnippet>152</a>                    range: chunk.clone(),
+<a href=#153 id=153 data-nosnippet>153</a>                    sentences: <span class="number">1</span>,
+<a href=#154 id=154 data-nosnippet>154</a>                    embedding: embeddings[i].clone(),
+<a href=#155 id=155 data-nosnippet>155</a>                    distance_to_next: <span class="prelude-val">None</span>,
+<a href=#156 id=156 data-nosnippet>156</a>                });
+<a href=#157 id=157 data-nosnippet>157</a>                <span class="kw">break</span>;
+<a href=#158 id=158 data-nosnippet>158</a>            }
+<a href=#159 id=159 data-nosnippet>159</a>            <span class="kw">let </span>first = <span class="kw-2">&amp;</span>embeddings[i];
+<a href=#160 id=160 data-nosnippet>160</a>            <span class="kw">let </span>second = <span class="kw-2">&amp;</span>embeddings[i + <span class="number">1</span>];
+<a href=#161 id=161 data-nosnippet>161</a>            <span class="kw">let </span>distance_to_next = first.cosine_similarity(second);
+<a href=#162 id=162 data-nosnippet>162</a>            <span class="kw">let </span>chunk = SemanticChunk {
+<a href=#163 id=163 data-nosnippet>163</a>                range: chunk.clone(),
+<a href=#164 id=164 data-nosnippet>164</a>                sentences: <span class="number">1</span>,
+<a href=#165 id=165 data-nosnippet>165</a>                embedding: first.clone(),
+<a href=#166 id=166 data-nosnippet>166</a>                distance_to_next: <span class="prelude-val">Some</span>(distance_to_next),
+<a href=#167 id=167 data-nosnippet>167</a>            };
+<a href=#168 id=168 data-nosnippet>168</a>            chunks.push(chunk);
+<a href=#169 id=169 data-nosnippet>169</a>        }
+<a href=#170 id=170 data-nosnippet>170</a>
+<a href=#171 id=171 data-nosnippet>171</a>        <span class="comment">// Now loop until we have the right number of chunks merging the two closest chunks
+<a href=#172 id=172 data-nosnippet>172</a>        // Find the lowest distance chunk
+<a href=#173 id=173 data-nosnippet>173</a>        </span><span class="kw">while let </span><span class="prelude-val">Some</span>((index, first_chunk)) = chunks
+<a href=#174 id=174 data-nosnippet>174</a>            .iter()
+<a href=#175 id=175 data-nosnippet>175</a>            .enumerate()
+<a href=#176 id=176 data-nosnippet>176</a>            .filter(|(<span class="kw">_</span>, c)| c.distance_to_next.is_some())
+<a href=#177 id=177 data-nosnippet>177</a>            .max_by(|(index, c1), (index2, c2)| {
+<a href=#178 id=178 data-nosnippet>178</a>                <span class="comment">// Score higher if the similarity is high or if the text size of both is small
+<a href=#179 id=179 data-nosnippet>179</a>                </span><span class="kw">let </span>c1_score = <span class="self">self</span>.score_merge(c1, <span class="kw-2">&amp;</span>chunks[index + <span class="number">1</span>]);
+<a href=#180 id=180 data-nosnippet>180</a>                <span class="kw">let </span>c2_score = <span class="self">self</span>.score_merge(c2, <span class="kw-2">&amp;</span>chunks[index2 + <span class="number">1</span>]);
+<a href=#181 id=181 data-nosnippet>181</a>
+<a href=#182 id=182 data-nosnippet>182</a>                c1_score.partial_cmp(<span class="kw-2">&amp;</span>c2_score).unwrap()
+<a href=#183 id=183 data-nosnippet>183</a>            })
+<a href=#184 id=184 data-nosnippet>184</a>        {
+<a href=#185 id=185 data-nosnippet>185</a>            <span class="kw">let </span>second_chunk = <span class="kw-2">&amp;</span>chunks[index + <span class="number">1</span>];
+<a href=#186 id=186 data-nosnippet>186</a>
+<a href=#187 id=187 data-nosnippet>187</a>            <span class="kw">let </span>highest_similarity = <span class="self">self</span>.score_merge(first_chunk, second_chunk);
+<a href=#188 id=188 data-nosnippet>188</a>            <span class="kw">if </span>highest_similarity &lt; <span class="self">self</span>.target_score {
+<a href=#189 id=189 data-nosnippet>189</a>                <span class="kw">break</span>;
+<a href=#190 id=190 data-nosnippet>190</a>            }
+<a href=#191 id=191 data-nosnippet>191</a>
+<a href=#192 id=192 data-nosnippet>192</a>            <span class="comment">// Merge the two chunks
+<a href=#193 id=193 data-nosnippet>193</a>            </span><span class="kw">let </span>range = first_chunk.range.start..second_chunk.range.end;
+<a href=#194 id=194 data-nosnippet>194</a>            <span class="kw">let </span>sentences = first_chunk.sentences + second_chunk.sentences;
+<a href=#195 id=195 data-nosnippet>195</a>
+<a href=#196 id=196 data-nosnippet>196</a>            <span class="kw">let </span>new_text = text[range.clone()].trim();
+<a href=#197 id=197 data-nosnippet>197</a>            <span class="kw">let </span>embedding = embedder.embed(new_text).<span class="kw">await</span><span class="question-mark">?</span>;
+<a href=#198 id=198 data-nosnippet>198</a>
+<a href=#199 id=199 data-nosnippet>199</a>            <span class="comment">// Calculate the distance to the next chunk
+<a href=#200 id=200 data-nosnippet>200</a>            </span><span class="kw">let </span>distance_to_next = chunks
+<a href=#201 id=201 data-nosnippet>201</a>                .get(index + <span class="number">2</span>)
+<a href=#202 id=202 data-nosnippet>202</a>                .map(|chunk_after_merge| embedding.cosine_similarity(<span class="kw-2">&amp;</span>chunk_after_merge.embedding));
+<a href=#203 id=203 data-nosnippet>203</a>
+<a href=#204 id=204 data-nosnippet>204</a>            <span class="comment">// Recalculate the distance to the previous chunk
+<a href=#205 id=205 data-nosnippet>205</a>            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(prev_chunk) = index.checked_sub(<span class="number">1</span>).and_then(|index| chunks.get_mut(index)) {
+<a href=#206 id=206 data-nosnippet>206</a>                <span class="kw">let </span>distance_to_prev = prev_chunk.embedding.cosine_similarity(<span class="kw-2">&amp;</span>embedding);
+<a href=#207 id=207 data-nosnippet>207</a>                prev_chunk.distance_to_next = <span class="prelude-val">Some</span>(distance_to_prev);
+<a href=#208 id=208 data-nosnippet>208</a>            }
+<a href=#209 id=209 data-nosnippet>209</a>
+<a href=#210 id=210 data-nosnippet>210</a>            <span class="kw">let </span>new_chunk = SemanticChunk {
+<a href=#211 id=211 data-nosnippet>211</a>                range,
+<a href=#212 id=212 data-nosnippet>212</a>                sentences,
+<a href=#213 id=213 data-nosnippet>213</a>                embedding,
+<a href=#214 id=214 data-nosnippet>214</a>                distance_to_next,
+<a href=#215 id=215 data-nosnippet>215</a>            };
+<a href=#216 id=216 data-nosnippet>216</a>
+<a href=#217 id=217 data-nosnippet>217</a>            <span class="comment">// Remove the last chunk
+<a href=#218 id=218 data-nosnippet>218</a>            </span>chunks.remove(index + <span class="number">1</span>);
+<a href=#219 id=219 data-nosnippet>219</a>
+<a href=#220 id=220 data-nosnippet>220</a>            <span class="comment">// Add our merged chunk to the chunks
+<a href=#221 id=221 data-nosnippet>221</a>            </span>chunks[index] = new_chunk;
+<a href=#222 id=222 data-nosnippet>222</a>        }
+<a href=#223 id=223 data-nosnippet>223</a>
+<a href=#224 id=224 data-nosnippet>224</a>        <span class="kw">let </span><span class="kw-2">mut </span>final_chunks = Vec::new();
+<a href=#225 id=225 data-nosnippet>225</a>        <span class="kw">for </span>chunk <span class="kw">in </span>chunks {
+<a href=#226 id=226 data-nosnippet>226</a>            <span class="kw">let </span>SemanticChunk {
+<a href=#227 id=227 data-nosnippet>227</a>                range, embedding, ..
+<a href=#228 id=228 data-nosnippet>228</a>            } = chunk;
+<a href=#229 id=229 data-nosnippet>229</a>            final_chunks.push(Chunk {
+<a href=#230 id=230 data-nosnippet>230</a>                byte_range: range,
+<a href=#231 id=231 data-nosnippet>231</a>                embeddings: <span class="macro">vec!</span>[embedding],
+<a href=#232 id=232 data-nosnippet>232</a>            });
+<a href=#233 id=233 data-nosnippet>233</a>        }
+<a href=#234 id=234 data-nosnippet>234</a>
+<a href=#235 id=235 data-nosnippet>235</a>        <span class="prelude-val">Ok</span>(final_chunks)
+<a href=#236 id=236 data-nosnippet>236</a>    }
+<a href=#237 id=237 data-nosnippet>237</a>}</code></pre></div></section></main></body></html>

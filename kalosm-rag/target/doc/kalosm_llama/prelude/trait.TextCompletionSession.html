@@ -1,0 +1,157 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Text Completion Session"><title>TextCompletionSession in kalosm_llama::prelude - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../static.files/rustdoc-916cea96.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="kalosm_llama" data-themes="" data-resource-suffix="" data-rustdoc-version="1.87.0 (17067e9ac 2025-05-09)" data-channel="1.87.0" data-search-js="search-e7298875.js" data-settings-js="settings-d72f25bb.js" ><script src="../../static.files/storage-82c7156e.js"></script><script defer src="sidebar-items.js"></script><script defer src="../../static.files/main-fb8c74a8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-044be391.svg"></head><body class="rustdoc trait"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../../kalosm_llama/index.html">kalosm_<wbr>llama</a><span class="version">0.4.1</span></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">Text<wbr>Completion<wbr>Session</a></h2><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#text-completion-session" title="Text Completion Session">Text Completion Session</a><ul><li><a href="#saving-and-loading-sessions" title="Saving and Loading Sessions">Saving and Loading Sessions</a></li><li><a href="#cloning-sessions" title="Cloning Sessions">Cloning Sessions</a></li></ul></li></ul><h3><a href="#required-associated-types">Required Associated Types</a></h3><ul class="block"><li><a href="#associatedtype.Error" title="Error">Error</a></li></ul><h3><a href="#required-methods">Required Methods</a></h3><ul class="block"><li><a href="#tymethod.from_bytes" title="from_bytes">from_bytes</a></li><li><a href="#tymethod.try_clone" title="try_clone">try_clone</a></li><li><a href="#tymethod.write_to" title="write_to">write_to</a></li></ul><h3><a href="#provided-methods">Provided Methods</a></h3><ul class="block"><li><a href="#method.to_bytes" title="to_bytes">to_bytes</a></li></ul><h3><a href="#foreign-impls">Implementations on Foreign Types</a></h3><ul class="block"><li><a href="#impl-TextCompletionSession-for-()" title="()">()</a></li></ul><h3><a href="#implementors">Implementors</a></h3></section><div id="rustdoc-modnav"><h2><a href="index.html">In kalosm_<wbr>llama::<wbr>prelude</a></h2></div></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><div class="rustdoc-breadcrumbs"><a href="../index.html">kalosm_llama</a>::<wbr><a href="index.html">prelude</a></div><h1>Trait <span class="trait">TextCompletionSession</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../../src/kalosm_language_model/model/mod.rs.html#12">Source</a> </span></div><pre class="rust item-decl"><code>pub trait TextCompletionSession {
+    type <a href="#associatedtype.Error" class="associatedtype">Error</a>: <a class="trait" href="https://doc.rust-lang.org/1.87.0/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + <a class="trait" href="https://doc.rust-lang.org/1.87.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> + 'static;
+
+    // Required methods
+    fn <a href="#tymethod.write_to" class="fn">write_to</a>(&amp;self, into: &amp;mut <a class="struct" href="https://doc.rust-lang.org/1.87.0/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.u8.html">u8</a>&gt;) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.unit.html">()</a>, Self::<a class="associatedtype" href="trait.TextCompletionSession.html#associatedtype.Error" title="type kalosm_llama::prelude::TextCompletionSession::Error">Error</a>&gt;;
+<span class="item-spacer"></span>    fn <a href="#tymethod.from_bytes" class="fn">from_bytes</a>(bytes: &amp;[<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.u8.html">u8</a>]) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Self, Self::<a class="associatedtype" href="trait.TextCompletionSession.html#associatedtype.Error" title="type kalosm_llama::prelude::TextCompletionSession::Error">Error</a>&gt;
+       <span class="where">where Self: <a class="trait" href="https://doc.rust-lang.org/1.87.0/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a></span>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.try_clone" class="fn">try_clone</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Self, Self::<a class="associatedtype" href="trait.TextCompletionSession.html#associatedtype.Error" title="type kalosm_llama::prelude::TextCompletionSession::Error">Error</a>&gt;
+       <span class="where">where Self: <a class="trait" href="https://doc.rust-lang.org/1.87.0/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a></span>;
+
+    // Provided method
+    fn <a href="#method.to_bytes" class="fn">to_bytes</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.87.0/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.u8.html">u8</a>&gt;, Self::<a class="associatedtype" href="trait.TextCompletionSession.html#associatedtype.Error" title="type kalosm_llama::prelude::TextCompletionSession::Error">Error</a>&gt; { ... }
+}</code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><h2 id="text-completion-session"><a class="doc-anchor" href="#text-completion-session">§</a>Text Completion Session</h2>
+<p>The <a href="trait.TextCompletionSession.html" title="trait kalosm_llama::prelude::TextCompletionSession"><code>TextCompletionSession</code></a> trait holds the state of a text completion model after it has been fed some text. It can be used in combination with <a href="trait.TextCompletionModel.html" title="trait kalosm_llama::prelude::TextCompletionModel"><code>TextCompletionModel</code></a> to feed text and cache the results.</p>
+<h3 id="saving-and-loading-sessions"><a class="doc-anchor" href="#saving-and-loading-sessions">§</a>Saving and Loading Sessions</h3>
+<p>Sessions can be serialized and deserialized to and from bytes using the <a href="trait.TextCompletionSession.html#method.to_bytes" title="method kalosm_llama::prelude::TextCompletionSession::to_bytes"><code>TextCompletionSession::to_bytes</code></a> and <a href="trait.TextCompletionSession.html#tymethod.from_bytes" title="associated function kalosm_llama::prelude::TextCompletionSession::from_bytes"><code>TextCompletionSession::from_bytes</code></a> methods. This can be useful for saving and loading sessions to disk. Caching a session avoids re-processing the text again when the session is resumed.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>kalosm::language::<span class="kw-2">*</span>;
+<span class="kw">use </span>std::io::Write;
+
+<span class="attr">#[tokio::main]
+</span><span class="kw">async fn </span>main() {
+    <span class="kw">let </span><span class="kw-2">mut </span>llm = Llama::new().<span class="kw">await</span>.unwrap();
+    <span class="kw">let </span><span class="kw-2">mut </span>session = llm.new_session().unwrap();
+
+    <span class="comment">// Feed some text into the session
+    </span>llm.stream_text_with_callback(<span class="kw-2">&amp;mut </span>session, <span class="string">"The capital of France is "</span>, GenerationParameters::new().with_max_length(<span class="number">0</span>), |<span class="kw">_</span>| <span class="prelude-val">Ok</span>(())).<span class="kw">await</span>.unwrap();
+
+    <span class="comment">// Save the session to bytes
+    </span><span class="kw">let </span>session_as_bytes = session.to_bytes().unwrap();
+    
+    <span class="comment">// Load the session from bytes
+    </span><span class="kw">let </span><span class="kw-2">mut </span>session = LlamaSession::from_bytes(<span class="kw-2">&amp;</span>session_as_bytes).unwrap();
+
+    <span class="comment">// Feed some more text into the session
+    </span>llm.stream_text_with_callback(<span class="kw-2">&amp;mut </span>session, <span class="string">"The capital of France is "</span>, GenerationParameters::new(), |token| {<span class="macro">println!</span>(<span class="string">"{token}"</span>); <span class="prelude-val">Ok</span>(())}).<span class="kw">await</span>.unwrap();
+}</code></pre></div>
+<h3 id="cloning-sessions"><a class="doc-anchor" href="#cloning-sessions">§</a>Cloning Sessions</h3>
+<p>Not all models support cloning sessions, but if a model does support cloning sessions, you can clone a session using the <a href="trait.TextCompletionSession.html#tymethod.try_clone" title="method kalosm_llama::prelude::TextCompletionSession::try_clone"><code>TextCompletionSession::try_clone</code></a> method to clone a session state while retaining the original session.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>kalosm::language::<span class="kw-2">*</span>;
+<span class="kw">use </span>std::io::Write;
+
+<span class="attr">#[tokio::main]
+</span><span class="kw">async fn </span>main() {
+    <span class="kw">let </span><span class="kw-2">mut </span>llm = Llama::new().<span class="kw">await</span>.unwrap();
+    <span class="kw">let </span><span class="kw-2">mut </span>session = llm.new_session().unwrap();
+
+    <span class="comment">// Feed some text into the session
+    </span>llm.stream_text_with_callback(<span class="kw-2">&amp;mut </span>session, <span class="string">"The capital of France is "</span>, GenerationParameters::new().with_max_length(<span class="number">0</span>), |<span class="kw">_</span>| <span class="prelude-val">Ok</span>(())).<span class="kw">await</span>.unwrap();
+
+    <span class="comment">// Clone the session
+    </span><span class="kw">let </span>cloned_session = session.try_clone().unwrap();
+
+    <span class="comment">// Feed some more text into the cloned session
+    </span>llm.stream_text_with_callback(<span class="kw-2">&amp;mut </span>session, <span class="string">"The capital of France is "</span>, GenerationParameters::new(), |token| {<span class="macro">println!</span>(<span class="string">"{token}"</span>); <span class="prelude-val">Ok</span>(())}).<span class="kw">await</span>.unwrap();
+}</code></pre></div>
+</div></details><h2 id="required-associated-types" class="section-header">Required Associated Types<a href="#required-associated-types" class="anchor">§</a></h2><div class="methods"><details class="toggle" open><summary><section id="associatedtype.Error" class="method"><a class="src rightside" href="../../src/kalosm_language_model/model/mod.rs.html#14">Source</a><h4 class="code-header">type <a href="#associatedtype.Error" class="associatedtype">Error</a>: <a class="trait" href="https://doc.rust-lang.org/1.87.0/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + <a class="trait" href="https://doc.rust-lang.org/1.87.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> + 'static</h4></section></summary><div class="docblock"><p>The type of error the session may return during operations.</p>
+</div></details></div><h2 id="required-methods" class="section-header">Required Methods<a href="#required-methods" class="anchor">§</a></h2><div class="methods"><details class="toggle method-toggle" open><summary><section id="tymethod.write_to" class="method"><a class="src rightside" href="../../src/kalosm_language_model/model/mod.rs.html#17">Source</a><h4 class="code-header">fn <a href="#tymethod.write_to" class="fn">write_to</a>(&amp;self, into: &amp;mut <a class="struct" href="https://doc.rust-lang.org/1.87.0/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.u8.html">u8</a>&gt;) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.unit.html">()</a>, Self::<a class="associatedtype" href="trait.TextCompletionSession.html#associatedtype.Error" title="type kalosm_llama::prelude::TextCompletionSession::Error">Error</a>&gt;</h4></section></summary><div class="docblock"><p>Serialize the session into bytes. This method is identical to <a href="trait.TextCompletionSession.html#method.to_bytes" title="method kalosm_llama::prelude::TextCompletionSession::to_bytes"><code>TextCompletionSession::to_bytes</code></a> except it can re-use an existing <a href="https://doc.rust-lang.org/1.87.0/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec"><code>Vec</code></a> buffer.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.from_bytes" class="method"><a class="src rightside" href="../../src/kalosm_language_model/model/mod.rs.html#86-88">Source</a><h4 class="code-header">fn <a href="#tymethod.from_bytes" class="fn">from_bytes</a>(bytes: &amp;[<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.u8.html">u8</a>]) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Self, Self::<a class="associatedtype" href="trait.TextCompletionSession.html#associatedtype.Error" title="type kalosm_llama::prelude::TextCompletionSession::Error">Error</a>&gt;<div class="where">where
+    Self: <a class="trait" href="https://doc.rust-lang.org/1.87.0/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a>,</div></h4></section></summary><div class="docblock"><h5 id="loading-sessions"><a class="doc-anchor" href="#loading-sessions">§</a>Loading sessions</h5>
+<p>Sessions can be deserialized to and from bytes using the <a href="trait.TextCompletionSession.html#tymethod.from_bytes" title="associated function kalosm_llama::prelude::TextCompletionSession::from_bytes"><code>TextCompletionSession::from_bytes</code></a> method.
+Caching a session avoids re-processing the text again when the session is resumed.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>kalosm::language::<span class="kw-2">*</span>;
+<span class="kw">use </span>std::io::Write;
+
+<span class="attr">#[tokio::main]
+</span><span class="kw">async fn </span>main() {
+    <span class="kw">let </span><span class="kw-2">mut </span>llm = Llama::new().<span class="kw">await</span>.unwrap();
+    <span class="comment">// Load a text completion session from a file
+    </span><span class="kw">let </span><span class="kw-2">mut </span>session =
+        LlamaSession::from_bytes(std::fs::read(<span class="string">"session.bin"</span>).unwrap().as_slice()).unwrap();
+
+    <span class="comment">// Feed some more text into the session
+    </span>llm.stream_text_with_callback(
+        <span class="kw-2">&amp;mut </span>session,
+        <span class="string">"The capital of France is "</span>,
+        GenerationParameters::new(),
+        |token| {
+            <span class="macro">println!</span>(<span class="string">"{token}"</span>);
+            <span class="prelude-val">Ok</span>(())
+        },
+    )
+    .<span class="kw">await
+    </span>.unwrap();
+}</code></pre></div>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.try_clone" class="method"><a class="src rightside" href="../../src/kalosm_language_model/model/mod.rs.html#130-132">Source</a><h4 class="code-header">fn <a href="#tymethod.try_clone" class="fn">try_clone</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Self, Self::<a class="associatedtype" href="trait.TextCompletionSession.html#associatedtype.Error" title="type kalosm_llama::prelude::TextCompletionSession::Error">Error</a>&gt;<div class="where">where
+    Self: <a class="trait" href="https://doc.rust-lang.org/1.87.0/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a>,</div></h4></section></summary><div class="docblock"><h5 id="cloning-sessions-1"><a class="doc-anchor" href="#cloning-sessions-1">§</a>Cloning Sessions</h5>
+<p>Not all models support cloning sessions, but if a model does support cloning sessions, you can clone a session using the <a href="trait.TextCompletionSession.html#tymethod.try_clone" title="method kalosm_llama::prelude::TextCompletionSession::try_clone"><code>TextCompletionSession::try_clone</code></a> method to clone a session state while retaining the original session.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>kalosm::language::<span class="kw-2">*</span>;
+<span class="kw">use </span>std::io::Write;
+
+<span class="attr">#[tokio::main]
+</span><span class="kw">async fn </span>main() {
+    <span class="kw">let </span><span class="kw-2">mut </span>llm = Llama::new().<span class="kw">await</span>.unwrap();
+    <span class="kw">let </span><span class="kw-2">mut </span>session = llm.new_session().unwrap();
+
+    <span class="comment">// Feed some text into the session
+    </span>llm.stream_text_with_callback(
+        <span class="kw-2">&amp;mut </span>session,
+        <span class="string">"The capital of France is "</span>,
+        GenerationParameters::new().with_max_length(<span class="number">0</span>),
+        |<span class="kw">_</span>| <span class="prelude-val">Ok</span>(()),
+    )
+    .<span class="kw">await
+    </span>.unwrap();
+
+    <span class="comment">// Clone the session
+    </span><span class="kw">let </span>cloned_session = session.try_clone().unwrap();
+
+    <span class="comment">// Feed some more text into the cloned session
+    </span>llm.stream_text_with_callback(
+        <span class="kw-2">&amp;mut </span>session,
+        <span class="string">"The capital of France is "</span>,
+        GenerationParameters::new(),
+        |token| {
+            <span class="macro">println!</span>(<span class="string">"{token}"</span>);
+            <span class="prelude-val">Ok</span>(())
+        },
+    )
+    .<span class="kw">await
+    </span>.unwrap();
+}</code></pre></div>
+</div></details></div><h2 id="provided-methods" class="section-header">Provided Methods<a href="#provided-methods" class="anchor">§</a></h2><div class="methods"><details class="toggle method-toggle" open><summary><section id="method.to_bytes" class="method"><a class="src rightside" href="../../src/kalosm_language_model/model/mod.rs.html#50">Source</a><h4 class="code-header">fn <a href="#method.to_bytes" class="fn">to_bytes</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.87.0/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.u8.html">u8</a>&gt;, Self::<a class="associatedtype" href="trait.TextCompletionSession.html#associatedtype.Error" title="type kalosm_llama::prelude::TextCompletionSession::Error">Error</a>&gt;</h4></section></summary><div class="docblock"><h5 id="loading-sessions-1"><a class="doc-anchor" href="#loading-sessions-1">§</a>Loading sessions</h5>
+<p>Sessions can be deserialized to and from bytes using the <a href="trait.TextCompletionSession.html#tymethod.from_bytes" title="associated function kalosm_llama::prelude::TextCompletionSession::from_bytes"><code>TextCompletionSession::from_bytes</code></a> method.
+Caching a session avoids re-processing the text again when the session is resumed.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>kalosm::language::<span class="kw-2">*</span>;
+<span class="kw">use </span>std::io::Write;
+
+<span class="attr">#[tokio::main]
+</span><span class="kw">async fn </span>main() {
+    <span class="kw">let </span><span class="kw-2">mut </span>llm = Llama::new().<span class="kw">await</span>.unwrap();
+    <span class="kw">let </span><span class="kw-2">mut </span>session = llm.new_session().unwrap();
+
+    <span class="comment">// Feed some text into the session
+    </span>llm.stream_text_with_callback(
+        <span class="kw-2">&amp;mut </span>session,
+        <span class="string">"The capital of France is "</span>,
+        GenerationParameters::new().with_max_length(<span class="number">0</span>),
+        |<span class="kw">_</span>| <span class="prelude-val">Ok</span>(()),
+    )
+    .<span class="kw">await
+    </span>.unwrap();
+
+    <span class="comment">// Save the session to bytes
+    </span><span class="kw">let </span>session_as_bytes = session.to_bytes().unwrap();
+
+    <span class="comment">// And write those bytes to a file
+    </span>std::fs::write(<span class="string">"session.bin"</span>, session_as_bytes).unwrap();
+}</code></pre></div>
+</div></details></div><h2 id="foreign-impls" class="section-header">Implementations on Foreign Types<a href="#foreign-impls" class="anchor">§</a></h2><details class="toggle implementors-toggle"><summary><section id="impl-TextCompletionSession-for-()" class="impl"><a class="src rightside" href="../../src/kalosm_language_model/model/mod.rs.html#135">Source</a><a href="#impl-TextCompletionSession-for-()" class="anchor">§</a><h3 class="code-header">impl <a class="trait" href="trait.TextCompletionSession.html" title="trait kalosm_llama::prelude::TextCompletionSession">TextCompletionSession</a> for <a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.unit.html">()</a></h3></section></summary><div class="impl-items"><section id="associatedtype.Error-1" class="associatedtype trait-impl"><a class="src rightside" href="../../src/kalosm_language_model/model/mod.rs.html#136">Source</a><a href="#associatedtype.Error-1" class="anchor">§</a><h4 class="code-header">type <a href="#associatedtype.Error" class="associatedtype">Error</a> = <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/convert/enum.Infallible.html" title="enum core::convert::Infallible">Infallible</a></h4></section><section id="method.write_to" class="method trait-impl"><a class="src rightside" href="../../src/kalosm_language_model/model/mod.rs.html#138">Source</a><a href="#method.write_to" class="anchor">§</a><h4 class="code-header">fn <a href="#tymethod.write_to" class="fn">write_to</a>(
+    &amp;self,
+    _into: &amp;mut <a class="struct" href="https://doc.rust-lang.org/1.87.0/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.u8.html">u8</a>&gt;,
+) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.unit.html">()</a>, &lt;<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.unit.html">()</a> as <a class="trait" href="trait.TextCompletionSession.html" title="trait kalosm_llama::prelude::TextCompletionSession">TextCompletionSession</a>&gt;::<a class="associatedtype" href="trait.TextCompletionSession.html#associatedtype.Error" title="type kalosm_llama::prelude::TextCompletionSession::Error">Error</a>&gt;</h4></section><section id="method.from_bytes" class="method trait-impl"><a class="src rightside" href="../../src/kalosm_language_model/model/mod.rs.html#142">Source</a><a href="#method.from_bytes" class="anchor">§</a><h4 class="code-header">fn <a href="#tymethod.from_bytes" class="fn">from_bytes</a>(_bytes: &amp;[<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.u8.html">u8</a>]) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.unit.html">()</a>, &lt;<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.unit.html">()</a> as <a class="trait" href="trait.TextCompletionSession.html" title="trait kalosm_llama::prelude::TextCompletionSession">TextCompletionSession</a>&gt;::<a class="associatedtype" href="trait.TextCompletionSession.html#associatedtype.Error" title="type kalosm_llama::prelude::TextCompletionSession::Error">Error</a>&gt;</h4></section><section id="method.try_clone" class="method trait-impl"><a class="src rightside" href="../../src/kalosm_language_model/model/mod.rs.html#146">Source</a><a href="#method.try_clone" class="anchor">§</a><h4 class="code-header">fn <a href="#tymethod.try_clone" class="fn">try_clone</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.87.0/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.unit.html">()</a>, &lt;<a class="primitive" href="https://doc.rust-lang.org/1.87.0/std/primitive.unit.html">()</a> as <a class="trait" href="trait.TextCompletionSession.html" title="trait kalosm_llama::prelude::TextCompletionSession">TextCompletionSession</a>&gt;::<a class="associatedtype" href="trait.TextCompletionSession.html#associatedtype.Error" title="type kalosm_llama::prelude::TextCompletionSession::Error">Error</a>&gt;</h4></section></div></details><h2 id="implementors" class="section-header">Implementors<a href="#implementors" class="anchor">§</a></h2><div id="implementors-list"><details class="toggle implementors-toggle"><summary><section id="impl-TextCompletionSession-for-LlamaSession" class="impl"><a class="src rightside" href="../../src/kalosm_llama/session.rs.html#28-55">Source</a><a href="#impl-TextCompletionSession-for-LlamaSession" class="anchor">§</a><h3 class="code-header">impl <a class="trait" href="trait.TextCompletionSession.html" title="trait kalosm_llama::prelude::TextCompletionSession">TextCompletionSession</a> for <a class="struct" href="../struct.LlamaSession.html" title="struct kalosm_llama::LlamaSession">LlamaSession</a></h3></section></summary><div class="impl-items"><section id="associatedtype.Error-2" class="associatedtype trait-impl"><a class="src rightside" href="../../src/kalosm_llama/session.rs.html#29">Source</a><a href="#associatedtype.Error-2" class="anchor">§</a><h4 class="code-header">type <a href="#associatedtype.Error" class="associatedtype">Error</a> = LlamaSessionLoadingError</h4></section></div></details><details class="toggle implementors-toggle"><summary><section id="impl-TextCompletionSession-for-BoxedTextCompletionSession" class="impl"><a class="src rightside" href="../../src/kalosm_language_model/model/boxed.rs.html#137">Source</a><a href="#impl-TextCompletionSession-for-BoxedTextCompletionSession" class="anchor">§</a><h3 class="code-header">impl <a class="trait" href="trait.TextCompletionSession.html" title="trait kalosm_llama::prelude::TextCompletionSession">TextCompletionSession</a> for <a class="struct" href="struct.BoxedTextCompletionSession.html" title="struct kalosm_llama::prelude::BoxedTextCompletionSession">BoxedTextCompletionSession</a></h3></section></summary><div class="impl-items"><section id="associatedtype.Error-3" class="associatedtype trait-impl"><a class="src rightside" href="../../src/kalosm_language_model/model/boxed.rs.html#138">Source</a><a href="#associatedtype.Error-3" class="anchor">§</a><h4 class="code-header">type <a href="#associatedtype.Error" class="associatedtype">Error</a> = <a class="struct" href="https://doc.rust-lang.org/1.87.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.87.0/core/error/trait.Error.html" title="trait core::error::Error">Error</a> + <a class="trait" href="https://doc.rust-lang.org/1.87.0/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> + <a class="trait" href="https://doc.rust-lang.org/1.87.0/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a>&gt;</h4></section></div></details></div><script src="../../trait.impl/kalosm_language_model/model/trait.TextCompletionSession.js" data-ignore-extern-crates="kalosm_language_model,std" async></script></section></div></main></body></html>

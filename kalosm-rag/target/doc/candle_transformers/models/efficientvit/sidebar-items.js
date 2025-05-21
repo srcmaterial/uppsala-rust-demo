@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["efficientvit","efficientvit_no_final_layer"],"struct":["Config"]};

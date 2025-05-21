@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["TruncationDirection","TruncationError","TruncationStrategy"],"fn":["truncate_encodings"],"struct":["TruncationParams"]};

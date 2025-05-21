@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["NextParserState","NodeOrText"],"struct":["XmlTreeBuilder","XmlTreeBuilderOpts"],"trait":["Tracer","TreeSink"]};

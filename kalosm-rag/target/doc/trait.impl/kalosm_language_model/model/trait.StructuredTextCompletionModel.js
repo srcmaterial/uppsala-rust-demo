@@ -1,0 +1,9 @@
+(function() {
+    var implementors = Object.fromEntries([["kalosm",[]],["kalosm_language",[]],["kalosm_language_model",[]],["kalosm_llama",[["impl&lt;S, Constraints&gt; <a class=\"trait\" href=\"kalosm_llama/prelude/trait.StructuredTextCompletionModel.html\" title=\"trait kalosm_llama::prelude::StructuredTextCompletionModel\">StructuredTextCompletionModel</a>&lt;Constraints, S&gt; for <a class=\"struct\" href=\"kalosm_llama/struct.Llama.html\" title=\"struct kalosm_llama::Llama\">Llama</a><div class=\"where\">where\n    &lt;Constraints as <a class=\"trait\" href=\"kalosm_llama/prelude/kalosm_sample/trait.Parser.html\" title=\"trait kalosm_llama::prelude::kalosm_sample::Parser\">Parser</a>&gt;::<a class=\"associatedtype\" href=\"kalosm_llama/prelude/kalosm_sample/trait.Parser.html#associatedtype.Output\" title=\"type kalosm_llama::prelude::kalosm_sample::Parser::Output\">Output</a>: <a class=\"trait\" href=\"https://doc.rust-lang.org/1.87.0/core/marker/trait.Send.html\" title=\"trait core::marker::Send\">Send</a>,\n    Constraints: <a class=\"trait\" href=\"kalosm_llama/prelude/kalosm_sample/trait.CreateParserState.html\" title=\"trait kalosm_llama::prelude::kalosm_sample::CreateParserState\">CreateParserState</a> + <a class=\"trait\" href=\"https://doc.rust-lang.org/1.87.0/core/marker/trait.Send.html\" title=\"trait core::marker::Send\">Send</a> + 'static,\n    S: <a class=\"trait\" href=\"llm_samplers/types/trait.Sampler.html\" title=\"trait llm_samplers::types::Sampler\">Sampler</a> + 'static,</div>"]]]]);
+    if (window.register_implementors) {
+        window.register_implementors(implementors);
+    } else {
+        window.pending_implementors = implementors;
+    }
+})()
+//{"start":57,"fragment_lengths":[13,23,29,1408]}

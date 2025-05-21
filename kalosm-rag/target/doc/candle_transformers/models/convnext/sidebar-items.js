@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["convnext","convnext_no_final_layer"],"struct":["Config"]};

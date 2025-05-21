@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["VectorDbError"],"struct":["ClosureMarker","EmbeddingId","IteratorMarker","VectorDB","VectorDBSearchBuilder","VectorDBSearchResult"],"trait":["IntoVectorDbSearchFilter"],"type":["Candidates"]};

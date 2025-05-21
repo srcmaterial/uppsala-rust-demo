@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["Piece","Sequence","TemplateProcessingBuilderError"],"struct":["SpecialToken","Template","TemplateProcessing","TemplateProcessingBuilder","Tokens"]};
