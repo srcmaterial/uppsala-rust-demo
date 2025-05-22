@@ -1,0 +1,21 @@
+[package]
+name = "rdf-viz"
+version = "0.1.0"
+edition = "2021"
+authors = ["RDF Viz Developer"]
+description = "A tool for converting RDF/XML files to network visualizations"
+
+[dependencies]
+# RDF parsing
+oxrdfxml = "0.3.0"      # Modern RDF/XML parsing
+oxrdf = "0.1.3"         # Modern RDF data model
+
+# Graph visualization
+petgraph = "0.6.4"      # Graph data structures
+graphviz-rust = "0.7.0" # Rust wrapper for Graphviz
+image = "0.24.7"        # Image processing
+
+# CLI
+clap = { version = "4.4.14", features = ["derive"] }
+anyhow = "1.0.79"       # Error handling
+thiserror = "1.0.51"    # Error definitions
