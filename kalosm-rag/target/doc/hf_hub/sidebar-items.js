@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["RepoType"],"mod":["api"],"struct":["Cache","CacheRepo","Repo"]};

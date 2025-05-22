@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["BinaryQuantizedCosine","BinaryQuantizedEuclidean","BinaryQuantizedManhattan","Cosine","DotProduct","Euclidean","Manhattan"]};

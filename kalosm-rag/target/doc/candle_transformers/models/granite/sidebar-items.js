@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"constant":["DEFAULT_MAX_SEQ_LEN"],"enum":["GraniteEosToks","GraniteRopeType"],"struct":["Cache","Config","Granite","GraniteConfig","GraniteRopeConfig"]};

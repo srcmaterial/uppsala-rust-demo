@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["LockError","MetalError"],"fn":["buffer_o"],"struct":["DeviceId","MetalDevice","MetalStorage"]};

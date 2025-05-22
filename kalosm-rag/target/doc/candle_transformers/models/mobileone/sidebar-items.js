@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["mobileone","mobileone_no_final_layer"],"struct":["Config"]};

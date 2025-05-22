@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"macro":["tree"],"mod":["iter"],"struct":["NodeId","NodeMut","NodeRef","Tree"]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["tiny_vit_5m"],"struct":["TinyViT"]};

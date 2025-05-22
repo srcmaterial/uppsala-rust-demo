@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["Bytes","DecodeIgnore","Str","Unit"],"struct":["I128","I16","I32","I64","I8","Lazy","LazyDecode","SerdeBincode","SerdeJson","U128","U16","U32","U64","U8"]};

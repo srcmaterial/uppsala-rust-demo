@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["func","func_t"],"struct":["Func","FuncT"]};

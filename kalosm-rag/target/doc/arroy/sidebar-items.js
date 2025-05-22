@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["Error"],"mod":["distances","internals"],"struct":["ArroyBuilder","QueryBuilder","Reader","Stats","TreeStats","Writer"],"trait":["Distance"],"type":["Database","ItemId","Result"]};

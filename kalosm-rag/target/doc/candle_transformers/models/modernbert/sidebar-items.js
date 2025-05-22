@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["ClassifierPooling"],"struct":["ClassifierConfig","Config","ModernBert","ModernBertClassifier","ModernBertDecoder","ModernBertForMaskedLM","ModernBertForSequenceClassification","ModernBertHead","ModernBertLayer","ModernBertMLP"]};

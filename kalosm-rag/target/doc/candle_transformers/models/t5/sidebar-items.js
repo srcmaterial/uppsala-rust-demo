@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["deserialize_feed_forward_proj_activation","linear_no_bias"],"struct":["ActivationWithOptionalGating","Config","Linear","T5EncoderModel","T5ForConditionalGeneration"]};

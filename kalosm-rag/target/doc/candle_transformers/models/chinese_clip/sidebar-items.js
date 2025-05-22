@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["Activation","EncoderConfig"],"fn":["div_l2_norm"],"mod":["text_model","vision_model"],"struct":["ChineseClipConfig","ChineseClipModel"]};

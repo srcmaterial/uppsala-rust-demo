@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["unknown_method_callback"]};

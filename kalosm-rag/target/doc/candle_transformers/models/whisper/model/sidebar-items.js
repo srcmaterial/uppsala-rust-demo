@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":["AudioEncoder","TextDecoder","Whisper"]};

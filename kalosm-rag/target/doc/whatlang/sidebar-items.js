@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["Lang","Script"],"fn":["detect","detect_lang","detect_script"],"struct":["Detector","Info"]};

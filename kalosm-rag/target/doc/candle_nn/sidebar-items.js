@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"mod":["activation","batch_norm","conv","embedding","encoding","func","group_norm","init","kv_cache","layer_norm","linear","loss","ops","optim","rnn","rotary_emb","sequential","var_builder","var_map"],"trait":["Module","ModuleT"]};

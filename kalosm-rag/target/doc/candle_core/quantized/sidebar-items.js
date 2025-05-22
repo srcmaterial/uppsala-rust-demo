@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["GgmlDType","QMatMul","QStorage"],"mod":["ggml_file","gguf_file","k_quants","metal","neon","utils"],"struct":["QTensor"],"trait":["QuantizedType"]};

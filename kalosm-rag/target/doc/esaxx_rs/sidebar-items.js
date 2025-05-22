@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["suffix","suffix_rs"],"struct":["Suffix","SuffixIterator"]};

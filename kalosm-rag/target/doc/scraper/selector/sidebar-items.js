@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["NonTSPseudoClass","PseudoElement"],"struct":["CssLocalName","CssString","Parser","Selector","Simple"],"trait":["ToCss"]};

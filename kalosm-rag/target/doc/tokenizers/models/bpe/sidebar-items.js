@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["Error"],"mod":["trainer"],"struct":["BPE","BpeBuilder"],"type":["MergeMap","Merges","Vocab"]};

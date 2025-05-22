@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["InvalidSlice","TensorIndexer"],"struct":["SliceIterator"],"trait":["IndexOp"]};

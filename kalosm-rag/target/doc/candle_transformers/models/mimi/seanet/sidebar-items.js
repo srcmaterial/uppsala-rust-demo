@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":["Config","SeaNetDecoder","SeaNetEncoder","SeaNetResnetBlock"]};

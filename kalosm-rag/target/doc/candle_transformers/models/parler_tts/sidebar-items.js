@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":["Attention","Config","Decoder","DecoderConfig","DecoderLayer","Model"]};

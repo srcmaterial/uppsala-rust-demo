@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"constant":["MR_DIV_N","N","NR","UKR"],"fn":["add","load","mul","mul_add","mul_add_lane","scalar_add","scalar_mul","scalar_mul_add","splat","x1x1","x1x2","x1x3","x1x4","x1x5","x1x6","x1x7","x1x8","x2x1","x2x2","x2x3","x2x4","x2x5","x2x6","x2x7","x2x8"],"type":["Pack","T"]};

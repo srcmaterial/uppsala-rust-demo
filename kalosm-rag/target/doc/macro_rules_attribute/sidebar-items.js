@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"attr":["apply","derive","macro_rules_attribute","macro_rules_derive"],"derive":["Custom"],"macro":["attribute_alias","derive_alias"]};

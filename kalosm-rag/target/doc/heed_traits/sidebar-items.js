@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"trait":["BytesDecode","BytesEncode","Comparator","LexicographicComparator"],"type":["BoxedError"]};

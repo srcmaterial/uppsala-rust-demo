@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"constant":["H_M","H_N","H_UKR","MR_DIV_N","N","NR","UKR"],"fn":["scalar_add","scalar_mul","scalar_mul_add","x1x16","x1x32","x2x16","x2x32"],"type":["T"]};

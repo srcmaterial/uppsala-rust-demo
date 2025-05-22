@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["to_vec0_round","to_vec1_round","to_vec2_round","to_vec3_round"]};

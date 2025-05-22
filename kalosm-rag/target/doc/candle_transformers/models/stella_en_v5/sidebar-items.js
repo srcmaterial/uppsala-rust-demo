@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["EmbedDim","ModelVariant"],"struct":["Config","EmbedHead","EmbeddingModel","Embeddings","Model"]};

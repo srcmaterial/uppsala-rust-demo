@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["PaddingDirection","PaddingStrategy"],"fn":["pad_encodings"],"struct":["PaddingParams"]};

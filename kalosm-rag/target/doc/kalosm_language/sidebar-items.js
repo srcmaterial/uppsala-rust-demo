@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"mod":["context","prelude","search","vector_db"]};

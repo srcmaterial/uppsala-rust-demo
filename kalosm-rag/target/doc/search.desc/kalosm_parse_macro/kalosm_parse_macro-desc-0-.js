@@ -1,1 +1,0 @@
-searchState.loadedDescShard("kalosm_parse_macro", 0, "Derive a default JSON parser for a unit value, struct or …")

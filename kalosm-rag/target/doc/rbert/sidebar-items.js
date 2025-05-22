@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["BertError","BertLoadingError","EmbeddingVariant","Pooling"],"struct":["Bert","BertBuilder","BertModel","BertSource","Config","Embedding","EmbeddingInput"],"trait":["Embedder","EmbedderCacheExt","EmbedderExt","ModelBuilder"]};

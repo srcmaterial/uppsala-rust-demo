@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["PreTokenizerWrapper"],"mod":["bert","byte_level","delimiter","digits","metaspace","punctuation","sequence","split","unicode_scripts","whitespace"]};

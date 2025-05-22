@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["CudnnFwdAlgo"],"struct":["ParamsConv1D","ParamsConv2D","ParamsConvTranspose1D","ParamsConvTranspose2D"]};

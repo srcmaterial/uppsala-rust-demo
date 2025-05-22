@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"mod":["generation","models","object_detection","pipelines","quantized_nn","quantized_var_builder","utils"]};

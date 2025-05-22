@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":["Config","Model","TextConfig","TextModel","TextTransformer","VisionConfig","VisionModel"]};

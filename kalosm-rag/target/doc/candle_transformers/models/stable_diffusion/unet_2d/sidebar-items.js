@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":["BlockConfig","UNet2DConditionModel","UNet2DConditionModelConfig"]};

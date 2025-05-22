@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["NormType"],"mod":["conv","encodec","quantization","seanet","transformer"]};

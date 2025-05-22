@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["AttrSelectorOperation","AttrSelectorOperator","CaseSensitivity","NamespaceConstraint","ParsedAttrSelectorOperation","ParsedCaseSensitivity"],"static":["SELECTOR_WHITESPACE"],"struct":["AttrSelectorWithOptionalNamespace"]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["IgnoreNthChildForInvalidation","MatchingMode","NeedsSelectorFlags","QuirksMode","RelativeSelectorMatchingState","VisitedHandlingMode"],"struct":["MatchingContext"]};

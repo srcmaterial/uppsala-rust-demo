@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["layer_norm","layer_norm_no_bias","rms_norm"],"struct":["LayerNorm","LayerNormConfig","RmsNorm"]};

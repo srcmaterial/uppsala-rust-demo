@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["CacheError"],"fn":["accelerated_device_if_available","copy_tensor_into_vec","maybe_autoreleasepool"],"struct":["AttentionMask","Cache","KvCache","MaskCache","TensorCache"]};

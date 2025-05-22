@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["configure","get_option","set_option"]};

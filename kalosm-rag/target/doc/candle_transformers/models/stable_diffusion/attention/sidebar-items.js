@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":["AttentionBlock","AttentionBlockConfig","CrossAttention","SpatialTransformer","SpatialTransformerConfig"]};

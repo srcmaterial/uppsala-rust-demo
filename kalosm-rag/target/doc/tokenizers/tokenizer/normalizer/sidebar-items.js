@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["OffsetReferential","Range","SplitDelimiterBehavior"],"fn":["bytes_to_char","char_to_bytes","get_range_of"],"struct":["NormalizedString"]};

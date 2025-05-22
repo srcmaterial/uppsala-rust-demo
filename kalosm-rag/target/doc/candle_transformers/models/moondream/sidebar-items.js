@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":["Config","Encoder","Model","VisionConfig","VisionEncoder"]};

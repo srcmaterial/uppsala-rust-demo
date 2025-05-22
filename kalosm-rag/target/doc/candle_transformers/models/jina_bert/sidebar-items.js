@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"constant":["DTYPE"],"enum":["PositionEmbeddingType"],"struct":["BertModel","Config"]};

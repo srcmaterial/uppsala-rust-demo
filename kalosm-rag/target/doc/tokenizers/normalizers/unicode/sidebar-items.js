@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":["NFC","NFD","NFKC","NFKD","Nmt"]};

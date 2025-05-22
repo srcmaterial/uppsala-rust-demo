@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":["Config","Decoder","DecoderBlock","Encoder","EncoderBlock","Model","ResidualUnit","ResidualVectorQuantizer","Snake1d","VectorQuantizer"]};

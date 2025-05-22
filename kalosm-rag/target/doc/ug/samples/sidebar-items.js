@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["simple_add"],"mod":["op","ssa"]};

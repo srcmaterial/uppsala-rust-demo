@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"mod":["dom","error","extractor","scorer"]};

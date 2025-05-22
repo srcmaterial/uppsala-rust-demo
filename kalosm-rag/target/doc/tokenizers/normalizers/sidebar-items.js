@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["NormalizerWrapper"],"mod":["bert","byte_level","precompiled","prepend","replace","strip","unicode","utils"],"struct":["Precompiled"]};

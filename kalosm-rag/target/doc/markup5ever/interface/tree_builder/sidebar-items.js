@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["NextParserState","NodeOrText","QuirksMode"],"fn":["create_element"],"struct":["ElementFlags"],"trait":["Tracer","TreeSink"]};

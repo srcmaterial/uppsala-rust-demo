@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["dropout","hard_sigmoid","layer_norm","layer_norm_slow","leaky_relu","log_softmax","pixel_shuffle","pixel_unshuffle","replication_pad2d","rms_norm","rms_norm_slow","sdpa","sigmoid","silu","softmax","softmax_last_dim","swiglu"],"struct":["Dropout","Identity"]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"mod":["attr","bloom","context","matching","parser","sink","visitor"],"struct":["NthIndexCache","OpaqueElement"],"trait":["Element"]};

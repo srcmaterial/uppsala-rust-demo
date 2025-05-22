@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"attr":["macro_rules_attribute"],"mod":["iter","padding","parallelism","truncation"],"struct":["SysRegex"]};

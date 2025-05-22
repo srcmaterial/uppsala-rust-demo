@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["div_l2_norm"],"struct":["MobileClipConfig","MobileClipModel"]};

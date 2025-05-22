@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["gemm_basic_generic","pack_lhs","pack_rhs"],"mod":["f16"]};

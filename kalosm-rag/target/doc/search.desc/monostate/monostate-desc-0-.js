@@ -1,1 +1,0 @@
-searchState.loadedDescShard("monostate", 0, "github crates-io docs-rs")

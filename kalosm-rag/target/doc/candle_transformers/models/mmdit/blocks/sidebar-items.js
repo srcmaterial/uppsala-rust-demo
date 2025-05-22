@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":["ContextQkvOnlyJointBlock","DiTBlock","FinalLayer","LayerNormNoAffine","MMDiTJointBlock","MMDiTXJointBlock","ModulateIntermediates","QkvOnlyDiTBlock","SelfAttnDiTBlock","SelfAttnModulateIntermediates"],"trait":["JointBlock"]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["TemporalBlockType"],"struct":["Config","Model"]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["Buffer","Value"],"fn":["eval_ssa"],"struct":["W"],"trait":["MinMax"]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["linear"],"mod":["image_encoder","mask_decoder","prompt_encoder","sam","tiny_vit","transformer"],"struct":["LayerNorm2d","MlpBlock"]};

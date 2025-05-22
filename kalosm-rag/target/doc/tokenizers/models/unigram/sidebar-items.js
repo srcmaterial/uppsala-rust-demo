@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["UnigramError","UnigramTrainerBuilderError","UnigramTrainerError"],"struct":["Lattice","Node","Unigram","UnigramIterator","UnigramTrainer","UnigramTrainerBuilder"]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["CountdownError","SignalKind"],"struct":["CountdownEvent","CountdownGuard","SignalEvent"]};

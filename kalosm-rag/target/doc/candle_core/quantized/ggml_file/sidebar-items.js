@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["VersionedMagic"],"fn":["qtensor_from_ggml"],"struct":["Content","HParams","Vocab"]};

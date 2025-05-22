@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":["Config","LinearAttentionConfig","LinearAttentionFeatureMapConfig","Model","SlidingWindowAttentionConfig"]};

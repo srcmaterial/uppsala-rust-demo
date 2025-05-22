@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["add_to_environment"],"mod":["filters","globals","pycompat"]};

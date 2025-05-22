@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["ResampleMethod"],"fn":["load"],"struct":["Config","Encodec"]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["calc_content_score","clean","find_candidates","fix_anchor_path","fix_img_path","get_class_weight","get_link_density","init_content_score","is_candidate","is_useless","preprocess"],"static":["LIKELY_CANDIDATES","NEGATIVE_CANDIDATES","POSITIVE_CANDIDATES","PUNCTUATIONS_REGEX","UNLIKELY_CANDIDATES"],"struct":["Candidate"]};

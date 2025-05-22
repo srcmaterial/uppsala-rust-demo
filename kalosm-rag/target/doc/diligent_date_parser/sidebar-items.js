@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["parse_date"],"struct":["DateTime","FixedOffset"]};

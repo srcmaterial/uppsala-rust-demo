@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"mod":["atom","dublincore","itunes","syndication"],"struct":["Extension","ExtensionBuilder"],"type":["ExtensionMap"]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["get_anyres_image_grid_shape","select_best_resolution"]};

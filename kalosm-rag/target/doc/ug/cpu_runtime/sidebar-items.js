@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["CpuStorage","CpuStorageRef","CpuStorageRefMut"],"struct":["CpuDevice","Func","KernelId","MatMul"]};

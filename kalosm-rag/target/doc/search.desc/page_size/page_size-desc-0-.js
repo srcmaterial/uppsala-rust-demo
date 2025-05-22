@@ -1,1 +1,0 @@
-searchState.loadedDescShard("page_size", 0, "This crate provides an easy, fast, cross-platform way to …\nThis function retrieves the system’s memory page size.\nThis function retrieves the system’s memory allocation …")

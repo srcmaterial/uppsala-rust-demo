@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["CaseSensitivity"],"mod":["element_ref","error","html","node","selectable","selector"],"trait":["Element"],"type":["StrTendril"]};

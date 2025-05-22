@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["layer_norm","layer_norm_no_bias","linear","linear_b","linear_no_bias"],"struct":["Embedding","Linear","RmsNorm"]};

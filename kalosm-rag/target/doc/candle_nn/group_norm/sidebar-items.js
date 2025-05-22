@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["group_norm"],"struct":["GroupNorm"]};

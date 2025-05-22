@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"constant":["DTYPE"],"enum":["HiddenAct","PositionEmbeddingType"],"struct":["BertEncoder","BertForMaskedLM","BertLMPredictionHead","BertLayer","BertModel","BertOnlyMLMHead","Config"]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"derive":["Pod"],"fn":["cast"],"macro":["cast"],"mod":["aarch64"],"struct":["Scalar"],"trait":["Boilerplate","MixedSimd","NullaryFnOnce","Pod","Simd"]};

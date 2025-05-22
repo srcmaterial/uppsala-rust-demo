@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["PrependScheme"],"struct":["Metaspace"]};

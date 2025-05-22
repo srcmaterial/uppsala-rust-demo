@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["conv2d","layer_norm","linear","linear_b","linear_no_bias"],"struct":["Conv2d","Embedding","LayerNorm","Linear","QMatMul","RmsNorm"]};

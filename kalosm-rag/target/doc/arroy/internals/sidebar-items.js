@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["KeyCodec","Side"],"struct":["Leaf","NodeCodec","NodeHeaderBinaryQuantizedCosine","NodeHeaderBinaryQuantizedEuclidean","NodeHeaderBinaryQuantizedManhattan","NodeHeaderCosine","NodeHeaderDotProduct","NodeHeaderEuclidean","NodeHeaderManhattan","SizeMismatch","UnalignedVector"],"trait":["UnalignedVectorCodec"]};

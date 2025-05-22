@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"constant":["BFLOAT","FLOAT","HALF","I64","U32","U8"],"struct":["Kernel"]};

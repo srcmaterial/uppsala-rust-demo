@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["mobilenetv4","mobilenetv4_no_final_layer"],"struct":["Config"]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["OffsetType"],"struct":["PreTokenizedString","Split"]};

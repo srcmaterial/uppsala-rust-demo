@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["vit_base","vit_large"],"struct":["EVA2VisionTransformer"]};

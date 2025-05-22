@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":["TextLMHeadModel","TextPooler"],"type":["Config"]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"macro":["set_params"],"mod":["code_gen","runtime","utils"]};

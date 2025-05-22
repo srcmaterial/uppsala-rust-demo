@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["par_for_each","par_range"],"trait":["VecOps"]};

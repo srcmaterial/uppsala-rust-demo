@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["ChunkStrategy","HypotheticalChunkerError","SummaryChunkerError"],"struct":["Chunk","DefaultSentenceChunker","HtmlSimplifier","Hypothetical","HypotheticalBuilder","SemanticChunker","SentenceChunker","Summarizer"],"trait":["Chunker"]};

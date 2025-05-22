@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"mod":["autoencoder","model","quantized_model","sampling"],"trait":["WithForward"]};

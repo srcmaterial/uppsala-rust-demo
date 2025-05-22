@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"constant":["IMAGE_SIZE"],"struct":["Sam"]};
